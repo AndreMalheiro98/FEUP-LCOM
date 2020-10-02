@@ -1,8 +1,8 @@
 # LCOM Project
 
-LCOM Project for group T&lt;n&gt;G&lt;p&gt;&lt;q&gt;.
+LCOM Project for group T&lt;3&gt;G&lt;0&gt;&lt;1&gt;.
 
 Group members:
 
-1. &lt;first name&gt; &lt;family name&gt; (&lt;email address&gt;)
-2. &lt;first name&gt; &lt;family name&gt; (&lt;email address&gt;)
+1. &lt;André&gt; &lt;Malheiro&gt; (&lt;up201706280@fe.up.pt&gt;)
+2. &lt;Juan&gt; &lt;Bellon&gt; (&lt;up201908142@fe.up.pt&gt;)
