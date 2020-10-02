@@ -1,8 +1,8 @@
 # LCOM Project
 
-LCOM Project for group T&lt;3&gt;G&lt;0&gt;&lt;1&gt;.
+LCOM Project for group T3G01.
 
 Group members:
 
-1. &lt;André&gt; &lt;Malheiro&gt; (&lt;up201706280@fe.up.pt&gt;)
-2. &lt;Juan&gt; &lt;Bellon&gt; (&lt;up201908142@fe.up.pt&gt;)
+1. André Malheiro (up201706280@fe.up.pt)
+2. Juan Bellon (up201908142@fe.up.pt)
