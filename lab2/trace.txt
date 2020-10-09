@@ -1,0 +1,27 @@
+@lcflib.a:2019, lcf_start
+  timer_test_read_config(timer, field)
+> timer_test_read_config(0, timer_status_field::all)
+  @lab2.c:33, timer_test_read_config
+    printf("%s is not yet implemented!\n", __func__)
+    "timer_test_read_config is not yet implemented!"
+  @lab2.c:36, timer_test_read_config
+    timer_get_conf(timer, status)
+  > timer_get_conf(0, addr: 0x824b280)
+    @timer.c:36, timer_get_conf
+      printf("%s is not yet implemented!\n", __func__)
+      "timer_get_conf is not yet implemented!"
+    @timer.c:48, timer_get_conf
+      sys_outb(port, READ_BACK)
+    > sys_outb(0x40, 0xe2 = 0b11100010)
+    @utils.c:21, util_sys_inb
+      printf("%s is not yet implemented!\n", __func__)
+      "util_sys_inb is not yet implemented!"
+    @utils.c:24, util_sys_inb
+      sys_inb(port, &number)
+    > sys_inb(0x40, addr: 0xeffff624)
+    < sys_inb(0x40, addr: 0xeffff624 [0xd5 = 0b11010101])
+  < timer_get_conf(0, addr: 0x824b280 [0xd5 = 0b11010101]) -> (ret: 0)
+  @lab2.c:37, timer_test_read_config
+    printf("%d\n",status)
+    "136622720"
+< timer_test_read_config(0, timer_status_field::all) -> (ret: 1)
