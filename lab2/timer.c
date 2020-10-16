@@ -32,8 +32,8 @@ void (timer_int_handler)() {
 }
 
 int (timer_get_conf)(uint8_t timer, uint8_t *st) {
-  /* To be implemented by the students */
-  printf("%s is not yet implemented!\n", __func__);
+  
+  //printf("%s is not yet implemented!\n", __func__);
   if(timer<0 || timer>2)
     exit(-1);
   uint8_t port;
@@ -54,8 +54,33 @@ int (timer_get_conf)(uint8_t timer, uint8_t *st) {
 
 int (timer_display_conf)(uint8_t timer, uint8_t st,
                         enum timer_status_field field) {
-  /* To be implemented by the students */
-  printf("%s is not yet implemented!\n", __func__);
+  
+  union timer_status_field_val value;
+  switch (field)
+  {
+  case tsf_all:
+    value.byte=st;
+    break;
 
-  return 1;
+  case tsf_initial:
+    value.in_mode=(TIMER_LSB_MSB & st)>>4;
+
+  case tsf_mode:
+    value.count_mode= (TIMER_SQR_WAVE & st) >>1;
+    break;
+  case tsf_base:
+    value.bcd=st & TIMER_BCD;
+    break;
+
+  default:
+    perror("Error on timer_status_field");
+    return 1;
+  }
+  //printf("%s is not yet implemented!\n", __func__);
+  if(timer_print_config(timer,field,value)!=0)
+  {
+    perror("Erron on printing timer config");
+    return 1;
+  }
+  return 0;
 }

@@ -1,4 +1,1 @@
-timer_test_read_config is not yet implemented!
-timer_get_conf is not yet implemented!
-util_sys_inb is not yet implemented!
-136622720
+timer_print_config:mode timer = 0 count_mode = SQUARE WAVE MODE
