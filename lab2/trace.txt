@@ -1,24 +1,28 @@
 @lcflib.a:2019, lcf_start
-  timer_test_read_config(timer, field)
-> timer_test_read_config(0, timer_status_field::mode)
-  @lab2.c:36, timer_test_read_config
-    timer_get_conf(timer, status)
-  > timer_get_conf(0, addr: 0x824b280)
-    @timer.c:48, timer_get_conf
-      sys_outb(port, READ_BACK)
-    > sys_outb(0x40, 0xe2 = 0b11100010)
-    @utils.c:32, util_sys_inb
-      sys_inb(port, &number)
-    > sys_inb(0x40, addr: 0xeffff614)
-    < sys_inb(0x40, addr: 0xeffff614 [0xdf = 0b11011111])
-  < timer_get_conf(0, addr: 0x824b280 [0xdf = 0b11011111]) -> (ret: 0)
-  @lab2.c:38, timer_test_read_config
-    timer_display_conf(timer, *status, field)
-  > timer_display_conf(0, 0xdf = 0b11011111, timer_status_field::mode)
-    @timer.c:80, timer_display_conf
-      timer_print_config(timer, field, value)
-    > timer_print_config(0, timer_status_field::mode, timer_status_field_val::count_mode = 3)
-      "timer_print_config:mode timer = 0 count_mode = SQUARE WAVE MODE"
-    < timer_print_config(...) -> (ret: 0)
-  < timer_display_conf(0, 0xdf = 0b11011111, timer_status_field::mode) -> (ret: 0)
-< timer_test_read_config(0, timer_status_field::mode) -> (ret: 0)
+  timer_test_time_base(timer, freq)
+> timer_test_time_base(0, 60)
+  @lab2.c:49, timer_test_time_base
+    printf("%s is not yet implemented!\n", __func__)
+    "timer_test_time_base is not yet implemented!"
+  @lab2.c:50, timer_test_time_base
+    timer_set_frequency(timer, freq)
+  > timer_set_frequency(0, 60)
+    @timer.c:10, timer_set_frequency
+      printf("%s is not yet implemented!\n", __func__)
+      "timer_set_frequency is not yet implemented!"
+    @timer.c:12, timer_set_frequency
+      timer_get_conf(timer, &defaul)
+    > timer_get_conf(0, addr: 0xeffff663)
+      @timer.c:61, timer_get_conf
+        sys_outb(port, READ_BACK)
+      > sys_outb(0x40, 0xe2 = 0b11100010)
+      @utils.c:32, util_sys_inb
+        sys_inb(port, &number)
+      > sys_inb(0x40, addr: 0xeffff554)
+      < sys_inb(0x40, addr: 0xeffff554 [0x01 = 0b00000001])
+    < timer_get_conf(0, addr: 0xeffff663 [0x01 = 0b00000001]) -> (ret: 0)
+    @timer.c:22, timer_set_frequency
+      sys_outb(timer, freq)
+    > sys_outb(0x40, 0x3d = 0b00111101)
+  < timer_set_frequency(0, 60) -> (ret: 0)
+< timer_test_time_base(0, 60) -> (ret: 0)

@@ -1,1 +1,2 @@
-timer_print_config:mode timer = 0 count_mode = SQUARE WAVE MODE
+timer_test_time_base is not yet implemented!
+timer_set_frequency is not yet implemented!

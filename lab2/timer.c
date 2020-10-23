@@ -8,8 +8,20 @@
 int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
   /* To be implemented by the students */
   printf("%s is not yet implemented!\n", __func__);
-
-  return 1;
+  uint8_t defaul;
+  if(timer_get_conf(timer,&defaul)!=0)
+    return 1;
+  uint8_t contr=defaul & 0xF;
+  freq= freq | ((u32_t) contr);
+  if(timer==0)
+    timer=TIMER_0;
+  else if(timer==1)
+    timer=TIMER_1;
+  else
+    timer=TIMER_2;
+  if(sys_outb(timer,freq)!=OK)
+    return 1;
+  return 0;
 }
 
 int (timer_subscribe_int)(uint8_t *bit_no) {

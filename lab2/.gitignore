@@ -1,1 +1,9 @@
+timer.o
+lab2.o
+lab2
+utils.o
+.swp
+.swo
+.gdbinit
+.clang-format
 .vscode/
