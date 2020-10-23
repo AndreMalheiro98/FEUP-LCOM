@@ -28,6 +28,7 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
+extern int timer_tick_counter;
 int(timer_test_read_config)(uint8_t timer, enum timer_status_field field) {
   
   //printf("%s is not yet implemented!\n", __func__);
@@ -55,7 +56,40 @@ int(timer_test_time_base)(uint8_t timer, uint32_t freq) {
 
 int(timer_test_int)(uint8_t time) {
   /* To be implemented by the students */
-  printf("%s is not yet implemented!\n", __func__);
 
-  return 1;
+  uint8_t bit_number;
+  if(timer_subscribe_int(&bit_number)==1)
+    return 1;
+  int ipc_status;
+  message msg;
+  int r;
+  uint32_t mask=BIT(bit_number);
+  int kappa=60*time;
+
+  while( timer_tick_counter<kappa) { /* You may want to use a different condition */
+      /* Get a request message. */
+      if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) { 
+        printf("driver_receive failed with: %d", r);
+        continue;
+      }
+      if (is_ipc_notify(ipc_status)) { /* received notification */
+        switch (_ENDPOINT_P(msg.m_source)) 
+        {
+          case HARDWARE: /* hardware interrupt notification */				
+            if (msg.m_notify.interrupts & mask) { /* subscribed interrupt */
+              timer_int_handler();  
+              if((timer_tick_counter%60)==0)
+                timer_print_elapsed_time();
+            }
+            break;
+          default:
+            break; /* no other notifications expected: do nothing */	
+        }
+      } else { /* received a standard message, not a notification */
+          /* no standard messages expected: do nothing */
+      }
+  }
+  if(timer_unsubscribe_int()!=0)
+    return 1;
+  return 0;
 }
