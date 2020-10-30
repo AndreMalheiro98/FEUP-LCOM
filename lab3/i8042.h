@@ -25,4 +25,9 @@
 #define KBD_TO_ERR BIT(6)
 #define KBD_PAR_ERR  BIT(7)
 
+//COMMANDS FOR KBC 
+
+#define COMMAND_READ_BYTE_COMMAND 0x20
+#define COMMAND_WRITE_BYTE_COMMAND 0x60
+
 #endif /* __I8042_H */

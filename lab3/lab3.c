@@ -85,8 +85,29 @@ int(kbd_test_scan)() {
 int(kbd_test_poll)() {
   /* To be completed by the students */
   printf("%s is not yet implemented!\n", __func__);
+  //Writing to input buffer - goal is reading the kbd command byte
 
-  return 1;
+  if(write_to_input_buf(COMMAND_READ_BYTE_COMMAND)!=0)
+    return 1;
+
+  //Reading command byte to restore later at the end of function
+  
+  uint8_t kbc_command_byte;
+  if(read_from_output_buffer(&kbc_command_byte)!=0)
+    return 1;
+  
+
+
+  //End of function. Must enable keyboard interrupts by changing kbd command byte -> set first bit to 1
+
+  uint8_t mask=0x01;
+  kbc_command_byte = kbc_command_byte | mask;
+  if(write_to_input_buf(kbc_command_byte)!=0)
+  {  
+    printf("Error enabling keyboard interrupts\n");
+    return 1;
+  }
+  return 0;
 }
 
 int(kbd_test_timed_scan)(uint8_t n) {

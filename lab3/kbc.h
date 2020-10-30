@@ -11,4 +11,6 @@
   int (kbc_subscribe_interrupts)();
   int (kbc_unsubsribe_interrupts)();
   void (kbc_ih)();
+  int (write_to_input_buf)(uint8_t command_byte);
+  int (read_from_output_buffer)(uint8_t *read_value);
 #endif
