@@ -5,6 +5,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "macros.h"
+#include "kbc.h"
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
   lcf_set_language("EN-US");
@@ -32,8 +34,45 @@ int main(int argc, char *argv[]) {
 int(kbd_test_scan)() {
   /* To be completed by the students */
   printf("%s is not yet implemented!\n", __func__);
+  kbc_ieh();
+    
+  //u32_t number;
+  int r,ipc_status;
+  message msg;
+  uint32_t mask=BIT(KBC_IRQ);
+  int x=1;
+  uint8_t param;
 
-  return 1;
+  while(x)
+  {
+    if( (r=driver_receive(ANY,&msg,&ipc_status)) !=0 ) 
+    {
+      printf("driver_receive failed with %d",r);
+      continue;
+    }
+    if(is_ipc_notify(ipc_status)){
+      switch(_ENDPOINT_P(msg.m_source))
+      {
+        case HARDWARE:
+          if(msg.m_notify.interrupts & mask)
+          {
+            if(aux(&param)==0)
+            {
+              
+              if(param==ESC_BREAK_CODE)
+                x=0;
+            }
+            
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  
+  }
+  cancel();
+  return 0;
 }
 
 int(kbd_test_poll)() {

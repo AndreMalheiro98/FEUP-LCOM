@@ -1,0 +1,6 @@
+/.vscode/
+.clang-format
+.gdbinit
+kbc.o
+lab3
+lab3.o
