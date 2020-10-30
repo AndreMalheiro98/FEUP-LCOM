@@ -30,17 +30,20 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
+extern uint8_t scancode;
 int(kbd_test_scan)() {
-  /* To be completed by the students */
-  printf("%s is not yet implemented!\n", __func__);
-  kbc_ieh();
+
+  if(kbc_subscribe_interrupts()!=0)
+  {
+    printf("Error subscribing keyboard interrupts\n");
+    exit(1);
+  }
     
   //u32_t number;
   int r,ipc_status;
   message msg;
   uint32_t mask=BIT(KBD_IRQ);
   int x=1;
-  uint8_t param;
 
   while(x)
   {
@@ -55,13 +58,9 @@ int(kbd_test_scan)() {
         case HARDWARE:
           if(msg.m_notify.interrupts & mask)
           {
-            if(aux(&param)==0)
-            {
-              printf("0x%x\n",param);
-              if(param==ESC_KEY)
-                x=0;
-            }
-            
+            kbc_ih();
+            if(scancode==ESC_KEY)
+              x=0;
           }
           break;
         default:
@@ -70,7 +69,11 @@ int(kbd_test_scan)() {
     }
   
   }
-  cancel();
+  if(kbc_unsubsribe_interrupts()!=0)
+  {
+    printf("Error unsubscribing keyboard interrupts\n");
+    exit(2);
+  }
   return 0;
 }
 

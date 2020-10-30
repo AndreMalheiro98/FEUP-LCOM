@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include "i8042.h"
 
-  void (kbc_ieh)();
-  void (cancel)();
-  int (aux)(uint8_t *scancode);
+  int (kbc_subscribe_interrupts)();
+  int (kbc_unsubsribe_interrupts)();
+  void (kbc_ih)();
 #endif

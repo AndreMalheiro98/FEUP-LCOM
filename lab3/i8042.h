@@ -17,6 +17,8 @@
 #define BREAKCODE	BIT(7)
 #define KB_ACK 0xFA
 
+#define KB_TWO_BYTES_SCANCODE_FIRST_BYTE 0xE0
+
 #define KBD_OBF BIT(0)
 #define KBD_IBF BIT(1)
 #define KBD_AUX BIT(5)
