@@ -1,4 +1,5 @@
 #include "kbc.h"
+
 int hook;
 uint8_t scancode;
 int (kbc_subscribe_interrupts)(){ 

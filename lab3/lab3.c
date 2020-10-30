@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
 
   return 0;
 }
-
+uint32_t number_sysinb_calls=0;
 extern uint8_t scancode;
 int(kbd_test_scan)() {
 
@@ -44,7 +44,7 @@ int(kbd_test_scan)() {
   message msg;
   uint32_t mask=BIT(KBD_IRQ);
   int x=1;
-
+  
   while(x)
   {
     if( (r=driver_receive(ANY,&msg,&ipc_status)) !=0 ) 
@@ -73,6 +73,11 @@ int(kbd_test_scan)() {
   {
     printf("Error unsubscribing keyboard interrupts\n");
     exit(2);
+  }
+  if(kbd_print_no_sysinb(number_sysinb_calls)!=0)
+  {
+    printf("Error printing number of sys_inb calls\n");
+    exit(3);
   }
   return 0;
 }
