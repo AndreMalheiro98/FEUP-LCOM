@@ -5,7 +5,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "macros.h"
 #include "kbc.h"
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -39,7 +38,7 @@ int(kbd_test_scan)() {
   //u32_t number;
   int r,ipc_status;
   message msg;
-  uint32_t mask=BIT(KBC_IRQ);
+  uint32_t mask=BIT(KBD_IRQ);
   int x=1;
   uint8_t param;
 
@@ -58,8 +57,8 @@ int(kbd_test_scan)() {
           {
             if(aux(&param)==0)
             {
-              
-              if(param==ESC_BREAK_CODE)
+              printf("0x%x\n",param);
+              if(param==ESC_KEY)
                 x=0;
             }
             

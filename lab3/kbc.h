@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "macros.h"
+#include "i8042.h"
 
   void (kbc_ieh)();
   void (cancel)();

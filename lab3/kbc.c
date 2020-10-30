@@ -2,8 +2,8 @@
 int hook;
 
 void (kbc_ieh)(){ 
-  hook=KBC_IRQ;
-  sys_irqsetpolicy(KBC_IRQ,IRQ_REENABLE|IRQ_EXCLUSIVE,&hook);
+  hook=KBD_IRQ;
+  sys_irqsetpolicy(KBD_IRQ,IRQ_REENABLE|IRQ_EXCLUSIVE,&hook);
   printf("Subscribed interrupts\n");
 }
 
@@ -14,11 +14,11 @@ void (cancel)(){
 int (aux)(uint8_t *scanccode)
 {
   uint32_t number;
-  if(sys_inb(KBC_ST_REG,&number)!=OK)
+  if(sys_inb(KBD_STAT_REG,&number)!=OK)
     return -1;
   uint8_t aux=number ;
   uint32_t obf;
-  if(sys_inb(OUT_BUF,&obf)!=OK)
+  if(sys_inb(KBD_OUT_BUF,&obf)!=OK)
     return -1;
   if((BIT(7) & aux))
   {
