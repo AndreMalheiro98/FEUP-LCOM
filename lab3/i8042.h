@@ -11,6 +11,7 @@
 #define DELAY_US	20000
 #define KBD_OUT_BUF		0x60
 #define KBD_IN_BUF 	0x60
+#define KBD_ARGUMENT 0x60
 #define KBD_STAT_REG 	0x64
 
 #define	KBD_CMD_ED 0xED
