@@ -3,6 +3,7 @@ extern uint32_t number_sysinb_calls;
 
 int hook;
 uint8_t bytes[2];
+bool flag;
 int (kbc_subscribe_interrupts)(){ 
   hook=KBD_IRQ;
   if(sys_irqsetpolicy(KBD_IRQ,IRQ_REENABLE|IRQ_EXCLUSIVE,&hook)!=OK)
@@ -21,17 +22,21 @@ void (kbc_ih)()
   uint8_t scancode;
   if(read_from_output_buffer(&scancode)!=0)
     return;
-  
-  
-  bytes[0]=scancode;
-  uint8_t number_of_bytes=1;
-  bool make=1;
   if(scancode==KB_TWO_BYTES_SCANCODE_FIRST_BYTE)
   {
     flag=1;
+    bytes[0]=scancode;
   }
   else{
-    flag=0;
+    if(flag)
+    {
+      bytes[1]=scancode;
+    }
+    else
+    {
+      bytes[0]=scancode;
+      flag=0;
+    }
   }
   return;
 }

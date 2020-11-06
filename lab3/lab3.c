@@ -33,9 +33,9 @@ uint32_t number_sysinb_calls=0;
 extern uint8_t bytes[2];
 extern bool flag;
 extern int timer_tick_counter;
-
 int(kbd_test_scan)() {
   number_sysinb_calls=0;
+  bool make=0;
   flag =0;
   if(kbc_subscribe_interrupts()!=0)
   {
@@ -48,7 +48,7 @@ int(kbd_test_scan)() {
   message msg;
   uint32_t mask=BIT(KBD_IRQ);
   int x=1;
-  
+  int i=0;
   while(x)
   {
     if( (r=driver_receive(ANY,&msg,&ipc_status)) !=0 ) 
@@ -62,15 +62,35 @@ int(kbd_test_scan)() {
         case HARDWARE:
           if(msg.m_notify.interrupts & mask)
           {
+            i++;
             kbc_ih();
-            if(flag=1)
+            if(flag==1)
             {
-
-            }else{
-              kbd_print_scancode(make,1,bytes);
+              if(bytes[1]&BREAKCODE)
+                make=0;
+              else
+                make=1;
+              if(i==2)
+              {
+                kbd_print_scancode(make,2,bytes);
+                flag=0;
+                i=0;
+              }
+              if(bytes[1]==ESC_KEY)
+                x=0;
             }
-            if(scancode==ESC_KEY)
-              x=0;
+            else
+            {
+              i=0;
+              if(bytes[0]&BREAKCODE)
+                make=0;
+              else
+                make=1;
+              kbd_print_scancode(make,1,bytes);
+              flag=0;
+              if(bytes[0]==ESC_KEY)
+                x=0;
+            }
           }
           break;
         default:
@@ -95,6 +115,7 @@ int(kbd_test_scan)() {
 int(kbd_test_poll)() {
   number_sysinb_calls=0;
   flag =0;
+  bool make=0;
   //Writing to input buffer - goal is reading the kbd command byte
   
   if(write_command(COMMAND_READ_BYTE_COMMAND)!=0)
@@ -106,9 +127,39 @@ int(kbd_test_poll)() {
     return 1;
   printf("Original command byte - 0x%.2x\n",kbc_command_byte);
   //Polling
-  while(scancode!=ESC_KEY)
+  int x=1;
+  int i=0;
+  while(x)
   {
+    i++;
     kbc_ih();
+    if(flag==1)
+    {
+      if(bytes[0]&BREAKCODE)
+        make=0;
+      else
+        make=1;
+      if(i==2)
+      {
+        kbd_print_scancode(make,2,bytes);
+        flag=0;
+        i=0;
+      }
+      if(bytes[1]==ESC_KEY)
+        x=0;
+    }
+    else
+    {
+      i=0;
+      if(bytes[0]&BREAKCODE)
+        make=0;
+      else
+        make=1;
+      kbd_print_scancode(make,1,bytes);
+      flag=0;
+      if(bytes[0]==ESC_KEY)
+        x=0;
+    }
     tickdelay(micros_to_ticks(DELAY_US));
   }
 
@@ -160,6 +211,7 @@ int(kbd_test_poll)() {
 int(kbd_test_timed_scan)(uint8_t n) {
   //Checking if n is greater than zero
   flag =0;
+  bool make=0;
   if(n<=0)
   {
     printf("n must be greater than zero\n");
@@ -189,6 +241,7 @@ int(kbd_test_timed_scan)(uint8_t n) {
   uint32_t timer_mask=BIT(bit_number);
   int x=1;
   int max_idle_time=60*n;
+  int i=0;
   while(x && (timer_tick_counter<max_idle_time))
   {
     if((r=driver_receive(ANY,&msg,&ipc_status)) !=0 )
@@ -207,10 +260,36 @@ int(kbd_test_timed_scan)(uint8_t n) {
         }
         if(msg.m_notify.interrupts & kbd_mask)
         {
+          i++;
           timer_tick_counter=0;
           kbc_ih();
-          if(scancode==ESC_KEY)
-            x=0;
+          if(flag==1)
+          {
+            if(bytes[0]&BREAKCODE)
+              make=0;
+            else
+              make=1;
+            if(i==2)
+            {
+              kbd_print_scancode(make,2,bytes);
+              flag=0;
+              i=0;
+            }
+            if(bytes[1]==ESC_KEY)
+              x=0;
+          }
+          else
+          {
+            i=0;
+            if(bytes[0]&BREAKCODE)
+              make=0;
+            else
+              make=1;
+            kbd_print_scancode(make,1,bytes);
+            flag=0;
+            if(bytes[0]==ESC_KEY)
+              x=0;
+          }
         }
         break;
       default:
