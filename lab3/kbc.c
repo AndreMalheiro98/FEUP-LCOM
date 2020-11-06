@@ -4,6 +4,7 @@ extern uint32_t number_sysinb_calls;
 int hook;
 uint8_t bytes[2];
 bool flag;
+int poll_helper;
 int (kbc_subscribe_interrupts)(){ 
   hook=KBD_IRQ;
   if(sys_irqsetpolicy(KBD_IRQ,IRQ_REENABLE|IRQ_EXCLUSIVE,&hook)!=OK)
@@ -22,6 +23,8 @@ void (kbc_ih)()
   uint8_t scancode;
   if(read_from_output_buffer(&scancode)!=0)
     return;
+  else
+    poll_helper=1;
   if(scancode==KB_TWO_BYTES_SCANCODE_FIRST_BYTE)
   {
     flag=1;

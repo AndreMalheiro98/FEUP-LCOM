@@ -111,63 +111,60 @@ int(kbd_test_scan)() {
   }
   return 0;
 }
+extern int poll_helper;
 
 int(kbd_test_poll)() {
   number_sysinb_calls=0;
   flag =0;
   bool make=0;
+
+  poll_helper=0;
   //Writing to input buffer - goal is reading the kbd command byte
   
-  if(write_command(COMMAND_READ_BYTE_COMMAND)!=0)
-    return 1;
-  //Reading command byte to restore later at the end of function
-  
-  uint8_t kbc_command_byte;
-  if(read_from_output_buffer(&kbc_command_byte)!=0)
-    return 1;
-  printf("Original command byte - 0x%.2x\n",kbc_command_byte);
   //Polling
   int x=1;
   int i=0;
   while(x)
   {
     i++;
+    printf("teste 1\n");
     kbc_ih();
-    if(flag==1)
+    if(poll_helper)
     {
-      if(bytes[0]&BREAKCODE)
-        make=0;
-      else
-        make=1;
-      if(i==2)
+      if(flag==1)
       {
-        kbd_print_scancode(make,2,bytes);
-        flag=0;
-        i=0;
+        if(bytes[0]&BREAKCODE)
+          make=0;
+        else
+          make=1;
+        if(i==2)
+        {
+          kbd_print_scancode(make,2,bytes);
+          flag=0;
+          i=0;
+        }
+        if(bytes[1]==ESC_KEY)
+          x=0;
       }
-      if(bytes[1]==ESC_KEY)
-        x=0;
-    }
-    else
-    {
-      i=0;
-      if(bytes[0]&BREAKCODE)
-        make=0;
       else
-        make=1;
-      kbd_print_scancode(make,1,bytes);
-      flag=0;
-      if(bytes[0]==ESC_KEY)
-        x=0;
+      {
+        i=0;
+        if(bytes[0]&BREAKCODE)
+          make=0;
+        else
+          make=1;
+        kbd_print_scancode(make,1,bytes);
+        flag=0;
+        if(bytes[0]==ESC_KEY)
+          x=0;
+      }
     }
+    poll_helper=0;
     tickdelay(micros_to_ticks(DELAY_US));
   }
 
-
   //End of function. Must enable keyboard interrupts by changing kbd command byte -> set first bit to 1
 
-  uint8_t mask=0x01;
-  kbc_command_byte = kbc_command_byte | mask;
 
   
   if(write_command(COMMAND_WRITE_BYTE_COMMAND)!=0)
@@ -176,28 +173,12 @@ int(kbd_test_poll)() {
     return 1;
   }
 
-  if(write_command_byte(kbc_command_byte)!=0)
+  if(write_command_byte(HEALTHY_COMMAND_BYTE)!=0)
   {
     printf("Error setting bit 0 to 1\n");
     return 1;
   }
   tickdelay(micros_to_ticks(DELAY_US));
- /* if(write_command(COMMAND_READ_BYTE_COMMAND)!=0)
-  {
-    printf("Error writing to input buffer\n");
-    return 1;
-  }
-  //Reading command byte to restore later at the end of function
-  
-  tickdelay(micros_to_ticks(DELAY_US));
-  
-  if(read_from_output_buffer(&helper)!=0)
-  {
-    printf("Error reading from output buffern\n");
-    continue;
-  }
-  printf("Checking command byte - 0x%.2x\n",helper);
-  }while(helper!=kbc_command_byte);*/
   //Printing number of sys_inb calls
 
   if(kbd_print_no_sysinb(number_sysinb_calls)!=0)
