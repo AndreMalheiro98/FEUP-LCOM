@@ -30,11 +30,13 @@ int main(int argc, char *argv[]) {
 }
 
 uint32_t number_sysinb_calls=0;
-extern uint8_t scancode;
+extern uint8_t bytes[2];
+extern bool flag;
 extern int timer_tick_counter;
 
 int(kbd_test_scan)() {
   number_sysinb_calls=0;
+  flag =0;
   if(kbc_subscribe_interrupts()!=0)
   {
     printf("Error subscribing keyboard interrupts\n");
@@ -61,6 +63,12 @@ int(kbd_test_scan)() {
           if(msg.m_notify.interrupts & mask)
           {
             kbc_ih();
+            if(flag=1)
+            {
+
+            }else{
+              kbd_print_scancode(make,1,bytes);
+            }
             if(scancode==ESC_KEY)
               x=0;
           }
@@ -85,11 +93,11 @@ int(kbd_test_scan)() {
 }
 
 int(kbd_test_poll)() {
-  
-  //Writing to input buffer - goal is reading the kbd command byte
   number_sysinb_calls=0;
-  uint8_t aux=0x00;
-  if(write_to_input_buf(COMMAND_READ_BYTE_COMMAND,aux)!=0)
+  flag =0;
+  //Writing to input buffer - goal is reading the kbd command byte
+  
+  if(write_command(COMMAND_READ_BYTE_COMMAND)!=0)
     return 1;
   //Reading command byte to restore later at the end of function
   
@@ -109,16 +117,21 @@ int(kbd_test_poll)() {
 
   uint8_t mask=0x01;
   kbc_command_byte = kbc_command_byte | mask;
-  uint8_t helper;
-  do{
-  if(write_to_input_buf(COMMAND_WRITE_BYTE_COMMAND,kbc_command_byte)!=0)
+
+  
+  if(write_command(COMMAND_WRITE_BYTE_COMMAND)!=0)
   {  
-    printf("Error enabling keyboard interrupts\n");
+    printf("Error preparing port 0x60\n");
     return 1;
   }
-  
-  
-  if(write_to_input_buf(COMMAND_READ_BYTE_COMMAND,aux)!=0)
+
+  if(write_command_byte(kbc_command_byte)!=0)
+  {
+    printf("Error setting bit 0 to 1\n");
+    return 1;
+  }
+  tickdelay(micros_to_ticks(DELAY_US));
+ /* if(write_command(COMMAND_READ_BYTE_COMMAND)!=0)
   {
     printf("Error writing to input buffer\n");
     return 1;
@@ -133,7 +146,7 @@ int(kbd_test_poll)() {
     continue;
   }
   printf("Checking command byte - 0x%.2x\n",helper);
-  }while(helper!=kbc_command_byte);
+  }while(helper!=kbc_command_byte);*/
   //Printing number of sys_inb calls
 
   if(kbd_print_no_sysinb(number_sysinb_calls)!=0)
@@ -146,6 +159,7 @@ int(kbd_test_poll)() {
 
 int(kbd_test_timed_scan)(uint8_t n) {
   //Checking if n is greater than zero
+  flag =0;
   if(n<=0)
   {
     printf("n must be greater than zero\n");

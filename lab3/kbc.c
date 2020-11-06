@@ -2,7 +2,7 @@
 extern uint32_t number_sysinb_calls;
 
 int hook;
-uint8_t scancode;
+uint8_t bytes[2];
 int (kbc_subscribe_interrupts)(){ 
   hook=KBD_IRQ;
   if(sys_irqsetpolicy(KBD_IRQ,IRQ_REENABLE|IRQ_EXCLUSIVE,&hook)!=OK)
@@ -18,32 +18,25 @@ int (kbc_unsubsribe_interrupts)(){
 
 void (kbc_ih)()
 {
+  uint8_t scancode;
   if(read_from_output_buffer(&scancode)!=0)
     return;
   
-  uint8_t bytes[2];
+  
   bytes[0]=scancode;
   uint8_t number_of_bytes=1;
   bool make=1;
   if(scancode==KB_TWO_BYTES_SCANCODE_FIRST_BYTE)
   {
-    
-    if(util_sys_inb(KBD_OUT_BUF,&scancode)!=0)
-    {
-      printf("Error reading Keyboard Output Buffer\n");
-      return;
-    }
-    bytes[1]=scancode;
-    number_of_bytes++;
+    flag=1;
   }
-  if(scancode & BREAKCODE)
-      make=0;
-  kbd_print_scancode(make,number_of_bytes,bytes);
+  else{
+    flag=0;
+  }
   return;
 }
 
-int (write_to_input_buf)(uint8_t command,uint8_t command_byte)
-{
+int (write_command)(uint8_t command){
   uint8_t register_status;
   int number_of_tries=0;
   while(number_of_tries<10)
@@ -68,20 +61,40 @@ int (write_to_input_buf)(uint8_t command,uint8_t command_byte)
       printf("Error writing to status register\n");
       continue;
     }
-    if(command==COMMAND_WRITE_BYTE_COMMAND)
-    {
-      uint32_t convers=command_byte;
-      if(sys_outb(KBD_ARGUMENT,convers)!=OK)
-      {
-        printf("Error writing argument to port 0x60\n");
-        continue;
-      }
-      printf("New command byte - 0x%.2x\n",command_byte);
-    }
+    
     printf("Returning from write\n");
     return 0;
   }
   return -1;
+}
+
+int (write_command_byte)(uint8_t command_byte)
+{
+  
+  tickdelay(micros_to_ticks(DELAY_US));
+  uint8_t register_status;
+  if(util_sys_inb(KBD_STAT_REG,&register_status)!=OK)
+  {
+    printf("Error reading register status\n");
+  }
+  if(register_status & KBD_OBF)
+  {
+    uint8_t aux;
+    if(read_from_output_buffer(&aux)!=0)
+      printf("Error - 0x%.2x\n",register_status);
+  }
+  else{
+    uint32_t convers=command_byte;
+    if(sys_outb(KBD_ARGUMENT,convers)!=OK)
+    {
+      printf("Error writing argument to port 0x60\n");
+      return -1;
+    }
+    printf("New command byte - 0x%.2x\n",command_byte);
+  }
+    
+  
+  return 0;
 }
 
 int (read_from_output_buffer)(uint8_t *read_value)
@@ -107,7 +120,6 @@ int (read_from_output_buffer)(uint8_t *read_value)
     }
     else
     {
-      
       continue;
     }
     if((BIT(7) & register_status))
