@@ -1,6 +1,6 @@
 #include "kbc.h"
 extern uint32_t number_sysinb_calls;
-extern int timer_tick_counter;
+
 int hook;
 uint8_t scancode;
 int (kbc_subscribe_interrupts)(){ 
@@ -20,7 +20,7 @@ void (kbc_ih)()
 {
   if(read_from_output_buffer(&scancode)!=0)
     return;
-  timer_tick_counter=0;
+  
   uint8_t bytes[2];
   bytes[0]=scancode;
   uint8_t number_of_bytes=1;
@@ -76,9 +76,10 @@ int (write_to_input_buf)(uint8_t command,uint8_t command_byte)
         printf("Error writing argument to port 0x60\n");
         continue;
       }
+      printf("New command byte - 0x%.2x\n",command_byte);
     }
+    printf("Returning from write\n");
     return 0;
-    
   }
   return -1;
 }
@@ -87,6 +88,7 @@ int (read_from_output_buffer)(uint8_t *read_value)
 { 
   uint8_t register_status;
   int number_of_tries=0;
+  
   while(number_of_tries<10)
   {
     number_of_tries++;
@@ -104,7 +106,10 @@ int (read_from_output_buffer)(uint8_t *read_value)
       }
     }
     else
+    {
+      
       continue;
+    }
     if((BIT(7) & register_status))
     {
       printf("Parity  error\n");

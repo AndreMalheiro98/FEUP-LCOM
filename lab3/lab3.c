@@ -4,7 +4,6 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-
 #include "kbc.h"
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -97,11 +96,12 @@ int(kbd_test_poll)() {
   uint8_t kbc_command_byte;
   if(read_from_output_buffer(&kbc_command_byte)!=0)
     return 1;
-  
+  printf("Original command byte - 0x%.2x\n",kbc_command_byte);
   //Polling
   while(scancode!=ESC_KEY)
   {
     kbc_ih();
+    tickdelay(micros_to_ticks(DELAY_US));
   }
 
 
@@ -109,12 +109,31 @@ int(kbd_test_poll)() {
 
   uint8_t mask=0x01;
   kbc_command_byte = kbc_command_byte | mask;
+  uint8_t helper;
+  do{
   if(write_to_input_buf(COMMAND_WRITE_BYTE_COMMAND,kbc_command_byte)!=0)
   {  
     printf("Error enabling keyboard interrupts\n");
     return 1;
   }
-
+  
+  
+  if(write_to_input_buf(COMMAND_READ_BYTE_COMMAND,aux)!=0)
+  {
+    printf("Error writing to input buffer\n");
+    return 1;
+  }
+  //Reading command byte to restore later at the end of function
+  
+  tickdelay(micros_to_ticks(DELAY_US));
+  
+  if(read_from_output_buffer(&helper)!=0)
+  {
+    printf("Error reading from output buffern\n");
+    continue;
+  }
+  printf("Checking command byte - 0x%.2x\n",helper);
+  }while(helper!=kbc_command_byte);
   //Printing number of sys_inb calls
 
   if(kbd_print_no_sysinb(number_sysinb_calls)!=0)
@@ -150,57 +169,50 @@ int(kbd_test_timed_scan)(uint8_t n) {
     return -1;
   }
   
-  int kbd_r,kbd_ipc_status,timer_r,timer_ipc_status;
-  message kbd_msg,timer_msg;
+  int r,ipc_status;
+  message msg;
   uint32_t kbd_mask=BIT(KBD_IRQ);
   uint32_t timer_mask=BIT(bit_number);
   int x=1;
   int max_idle_time=60*n;
   while(x && (timer_tick_counter<max_idle_time))
   {
-    if((timer_r=driver_receive(ANY,&timer_msg,&timer_ipc_status)) !=0 )
+    if((r=driver_receive(ANY,&msg,&ipc_status)) !=0 )
     {
-      printf("timer driver_receive failed with %d\n",timer_r);
+      printf("timer driver_receive failed with %d\n",r);
       continue;
     }
-    if(is_ipc_notify(timer_ipc_status))
+    if(is_ipc_notify(ipc_status))
     {
-      switch (_ENDPOINT_P(timer_msg.m_source))
+      switch (_ENDPOINT_P(msg.m_source))
       {
       case HARDWARE:
-        if(timer_msg.m_notify.interrupts & timer_mask)
+        if(msg.m_notify.interrupts & timer_mask)
+        {
           timer_int_handler();
+        }
+        if(msg.m_notify.interrupts & kbd_mask)
+        {
+          timer_tick_counter=0;
+          kbc_ih();
+          if(scancode==ESC_KEY)
+            x=0;
+        }
         break;
       default:
         break;
       }
     }
-    if( (kbd_r=driver_receive(ANY,&kbd_msg,&kbd_ipc_status)) !=0 ) 
-    {
-      printf("driver_receive failed with %d",kbd_r);
-      continue;
-    }
-    if(is_ipc_notify(kbd_ipc_status)){
-      switch(_ENDPOINT_P(kbd_msg.m_source))
-      {
-        case HARDWARE:
-          if(kbd_msg.m_notify.interrupts & kbd_mask)
-          {
-            kbc_ih();
-            if(scancode==ESC_KEY)
-              x=0;
-          }
-          break;
-        default:
-          break;
-      }
-    }
-  
   }
   if(kbc_unsubsribe_interrupts()!=0)
   {
     printf("Error unsubscribing keyboard interrupts\n");
     exit(2);
+  }
+  if(timer_unsubscribe_int()!=0)
+  {
+    printf("Error unsubscribing timer 0 interrupts\n");
+    return -1;
   }
   if(kbd_print_no_sysinb(number_sysinb_calls)!=0)
   {

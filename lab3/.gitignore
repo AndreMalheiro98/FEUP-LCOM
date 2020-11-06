@@ -5,3 +5,4 @@ kbc.o
 lab3
 lab3.o
 utils.o
+timer.o

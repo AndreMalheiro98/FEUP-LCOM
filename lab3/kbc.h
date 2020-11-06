@@ -2,7 +2,7 @@
 #define __KBC_H
   #include <lcom/lcf.h>
 #include <lcom/timer.h>
-#include <timer.h>
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
