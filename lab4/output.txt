@@ -1,0 +1,40 @@
+enablign
+Returning from write
+New command byte - 0xf4
+Data reporting was successffully disabled
+k
+GOing to interrupts
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Mouse interrupt
+Returning from write
+Error - 0x3d
+Byte read is not a mouse error
+Error reading answer from mouse

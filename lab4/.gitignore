@@ -1,2 +1,8 @@
 .clang-format
 /.vscode/
+kbc.o
+lab4
+lab4.o
+mouse.o
+utils.o
+.gdbinit
