@@ -39,7 +39,7 @@ int (mouse_test_packet)(uint32_t cnt) {
     return -1;
   }
   printf("enablign\n");
-  if(mouse_enable_data_report()!=0)
+  if(mouse_enable_data_reporting()!=0)
   {
     printf("Error enabling data report\n");
     return -1;
