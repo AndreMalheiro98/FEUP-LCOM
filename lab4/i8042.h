@@ -36,7 +36,13 @@
 //MOUSE
 
 #define MOUSE_IRQ 12
-
+#define MOUSE_LB BIT(0)
+#define MOUSE_RB BIT(1)
+#define MOUSE_MB BIT(2)
+#define MOUSE_MSB_X_DELTA BIT(4)
+#define MOUSE_MSB_Y_DELTA BIT(5)
+#define MOUSE_X_OVF BIT(6)
+#define MOUSE_Y_OVF BIT(7)
 //COMMANDS FOR MOUSE
 #define MOUSE_RESET 0xFF
 #define MOUSE_RESEND 0xFE

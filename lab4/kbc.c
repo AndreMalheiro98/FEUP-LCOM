@@ -69,7 +69,7 @@ int (write_command)(uint8_t command){
       continue;
     }
     
-    printf("Returning from write\n");
+
     return 0;
   }
   return -1;
@@ -97,7 +97,7 @@ int (write_command_byte)(uint8_t command_byte)
       printf("Error writing argument to port 0x60\n");
       return -1;
     }
-    printf("New command byte - 0x%.2x\n",command_byte);
+
   }
     
   

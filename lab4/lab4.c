@@ -30,32 +30,33 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 extern uint8_t data;
+extern bool flag;
 #include "mouse.h"
 #include "kbc.h"
 int (mouse_test_packet)(uint32_t cnt) {
-  //Subscribing mouse interrupts and enabling stream mode
+  // Enabling stream mode
+  if(mouse_enable_data_report()!=0)
+  {
+    printf("Error enabling data report\n");
+    return -1;
+  }
+  else
+    printf("Data report enabled successfully\n");
+  //Subscribing mouse interrupts
   if(mouse_subscribe_interrupts()==-1)
   {
     printf("Error subscribing mouse interrupts\n");
     return -1;
   }
-  printf("enablign\n");
-  if(mouse_enable_data_reporting()!=0)
-  {
-    printf("Error enabling data report\n");
-    return -1;
-  }
-
   
-
-  printf("GOing to interrupts\n");
   int ipc_status,r;
   message msg;
   uint32_t mask=BIT(MOUSE_IRQ);
-  int aux=-1;
-  struct packet l;
-  //bool flag=0;
+  
   int bytes=0;
+  uint8_t dados[3];
+  for(int i=0;i<3;i++)
+    dados[i]=0;
   while(cnt>0)
   {
     if( (r=driver_receive(ANY,&msg,&ipc_status)) !=0 )
@@ -69,40 +70,40 @@ int (mouse_test_packet)(uint32_t cnt) {
         case HARDWARE:
           if(msg.m_notify.interrupts & mask)
           {
-            if(aux!=-1)
-            {
               mouse_ih();
-              if(data & BIT(3) && bytes==0)
+
+              if(flag)
               {
-                l.bytes[0]=data;
-                l.lb=data;
-                l.rb=data >> 1;
-                l.mb=data >> 2;
-                l.y_ov=data>>7;
-                l.x_ov=data>>6;
+                if(data & BIT(3) && bytes==0)
+                  dados[0]=data;
+                else
+                  dados[bytes]=data;
                 bytes++;
               }
-              else{
-                l.bytes[bytes]=data;
-                bytes++;
-              }
+              else
+                continue;
+              
               if(bytes==3)
               {
-                mouse_print_packet(&l);
-                bytes=0;
+                struct packet pacote_dados;
+                createMousePacket(dados,&pacote_dados);
+                mouse_print_packet(&pacote_dados);
                 cnt--;
+                bytes=0;
               }
-            }
-            else
-            {
-              aux=0;
-            }
             
           }
         default:
           break;
       }
     }
+  }
+
+  //Unsubscribing mouse interrupts
+  if(mouse_unsubscribe_interrupts()==-1)
+  {
+    printf("Error unsubscribing mouse interrupts\n");
+    return -1;
   }
 
   //Disable data reporting
@@ -124,15 +125,9 @@ int (mouse_test_packet)(uint32_t cnt) {
     printf("Error reading answer from mouse\n");
     return -1;
   }
-  //Unsubscribing mouse interrupts
-  if(mouse_unsubscribe_interrupts()==-1)
-  {
-    printf("Error unsubscribing mouse interrupts\n");
-    return -1;
-  }
+  else
+    printf("Data report successfully disabled\n");
   
-  
-  printf("Returning\n");
   return 0;
 }
 

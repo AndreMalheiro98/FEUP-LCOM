@@ -7,6 +7,7 @@
 
 int (mouse_enable_data_report)(void);
 void (mouse_ih)(void);
+void createMousePacket(uint8_t array[3],struct packet *pp);
 int (mouse_subscribe_interrupts)();
 int (mouse_unsubscribe_interrupts)();
 int (read_return_from_mouse)();
