@@ -1,539 +1,486 @@
 @lcflib.a:2019, lcf_start
   mouse_test_packet(cnt)
 > mouse_test_packet(10)
-  @mouse.c:52, mouse_subscribe_interrupts
+  @mouse.c:53, mouse_subscribe_interrupts
     sys_irqsetpolicy(MOUSE_IRQ, IRQ_REENABLE | IRQ_EXCLUSIVE, &hook)
-  > sys_irqsetpolicy(12, 3, addr: 0x824a500 [12])
-  < sys_irqsetpolicy(12, 3, addr: 0x824a500 [10]) -> (ret: 0)
-  @lab4.c:41, mouse_test_packet
+  > sys_irqsetpolicy(12, 3, addr: 0x824a520 [12])
+  < sys_irqsetpolicy(12, 3, addr: 0x824a520 [10]) -> (ret: 0)
+  @lab4.c:42, mouse_test_packet
     printf("enablign\n")
     "enablign"
-  @lab4.c:42, mouse_test_packet
+  @lab4.c:43, mouse_test_packet
     mouse_enable_data_reporting()
-  @lab4.c:48, mouse_test_packet
-    printf("k\n")
-    "k"
-  @lab4.c:50, mouse_test_packet
+  @lab4.c:64, mouse_test_packet
     printf("GOing to interrupts\n")
     "GOing to interrupts"
-  @lab4.c:57, mouse_test_packet
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:57, mouse_test_packet
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x08 = 0b00001000])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x08 = 0b00001000])
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x00 = 0b00000000])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x02 = 0b00000010])
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x01 = 0b00000001])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x00 = 0b00000000])
+  @lab4.c:104, mouse_test_packet
+    mouse_print_packet(&l)
+  > mouse_print_packet(addr: 0xeffff6a0)
+    "B1=0x08 B2=0x02 B3=0x00 LB=1 MB=1 RB=1 XOV=0 X=2082 YOV=0 Y=32"
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x18 = 0b00011000])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x08 = 0b00001000])
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0xf5 = 0b11110101])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x01 = 0b00000001])
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x03 = 0b00000011])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x00 = 0b00000000])
+  @lab4.c:104, mouse_test_packet
+    mouse_print_packet(&l)
+  > mouse_print_packet(addr: 0xeffff6a0)
+    "B1=0x08 B2=0x01 B3=0x00 LB=1 MB=1 RB=1 XOV=0 X=2082 YOV=0 Y=32"
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x18 = 0b00011000])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x08 = 0b00001000])
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0xfb = 0b11111011])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x05 = 0b00000101])
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x02 = 0b00000010])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x00 = 0b00000000])
+  @lab4.c:104, mouse_test_packet
+    mouse_print_packet(&l)
+  > mouse_print_packet(addr: 0xeffff6a0)
+    "B1=0x08 B2=0x05 B3=0x00 LB=1 MB=1 RB=1 XOV=0 X=2082 YOV=0 Y=32"
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x18 = 0b00011000])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x08 = 0b00001000])
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0xfc = 0b11111100])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x07 = 0b00000111])
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x00 = 0b00000000])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x00 = 0b00000000])
+  @lab4.c:104, mouse_test_packet
+    mouse_print_packet(&l)
+  > mouse_print_packet(addr: 0xeffff6a0)
+    "B1=0x08 B2=0x07 B3=0x00 LB=1 MB=1 RB=1 XOV=0 X=2082 YOV=0 Y=32"
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x18 = 0b00011000])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x08 = 0b00001000])
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0xfb = 0b11111011])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x09 = 0b00001001])
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x02 = 0b00000010])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x00 = 0b00000000])
+  @lab4.c:104, mouse_test_packet
+    mouse_print_packet(&l)
+  > mouse_print_packet(addr: 0xeffff6a0)
+    "B1=0x08 B2=0x09 B3=0x00 LB=1 MB=1 RB=1 XOV=0 X=2082 YOV=0 Y=32"
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x18 = 0b00011000])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x08 = 0b00001000])
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0xfe = 0b11111110])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x05 = 0b00000101])
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x00 = 0b00000000])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x00 = 0b00000000])
+  @lab4.c:104, mouse_test_packet
+    mouse_print_packet(&l)
+  > mouse_print_packet(addr: 0xeffff6a0)
+    "B1=0x08 B2=0x05 B3=0x00 LB=1 MB=1 RB=1 XOV=0 X=2082 YOV=0 Y=32"
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x08 = 0b00001000])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x08 = 0b00001000])
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x01 = 0b00000001])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x03 = 0b00000011])
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x00 = 0b00000000])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x00 = 0b00000000])
+  @lab4.c:104, mouse_test_packet
+    mouse_print_packet(&l)
+  > mouse_print_packet(addr: 0xeffff6a0)
+    "B1=0x08 B2=0x03 B3=0x00 LB=1 MB=1 RB=1 XOV=0 X=2082 YOV=0 Y=32"
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x08 = 0b00001000])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x08 = 0b00001000])
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x02 = 0b00000010])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x04 = 0b00000100])
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x00 = 0b00000000])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x02 = 0b00000010])
+  @lab4.c:104, mouse_test_packet
+    mouse_print_packet(&l)
+  > mouse_print_packet(addr: 0xeffff6a0)
+    "B1=0x08 B2=0x04 B3=0x02 LB=1 MB=1 RB=1 XOV=0 X=2082 YOV=0 Y=32"
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x08 = 0b00001000])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x08 = 0b00001000])
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x02 = 0b00000010])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x04 = 0b00000100])
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x00 = 0b00000000])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x00 = 0b00000000])
+  @lab4.c:104, mouse_test_packet
+    mouse_print_packet(&l)
+  > mouse_print_packet(addr: 0xeffff6a0)
+    "B1=0x08 B2=0x04 B3=0x00 LB=1 MB=1 RB=1 XOV=0 X=2082 YOV=0 Y=32"
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x08 = 0b00001000])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x08 = 0b00001000])
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x02 = 0b00000010])
-  @lab4.c:57, mouse_test_packet
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x05 = 0b00000101])
+  @lab4.c:74, mouse_test_packet
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
-  @lab4.c:70, mouse_test_packet
+  @lab4.c:87, mouse_test_packet
     mouse_ih()
-    @mouse.c:28, mouse_ih
-      printf("Mouse interrupt\n")
-      "Mouse interrupt"
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x64, addr: 0xeffff5bc)
-    < sys_inb(0x64, addr: 0xeffff5bc [0x3d = 0b00111101])
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
     @utils.c:31, util_sys_inb
       sys_inb(port, &number)
-    > sys_inb(0x60, addr: 0xeffff5bc)
-    < sys_inb(0x60, addr: 0xeffff5bc [0x00 = 0b00000000])
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x00 = 0b00000000])
+  @lab4.c:104, mouse_test_packet
+    mouse_print_packet(&l)
+  > mouse_print_packet(addr: 0xeffff6a0)
+    "B1=0x08 B2=0x05 B3=0x00 LB=1 MB=1 RB=1 XOV=0 X=2082 YOV=0 Y=32"
   @utils.c:31, util_sys_inb
     sys_inb(port, &number)
-  > sys_inb(0x64, addr: 0xeffff644)
-  < sys_inb(0x64, addr: 0xeffff644 [0x1c = 0b00011100])
+  > sys_inb(0x64, addr: 0xeffff634)
+  < sys_inb(0x64, addr: 0xeffff634 [0x1c = 0b00011100])
   @kbc.c:66, write_command
     sys_outb(KBD_STAT_REG, aux)
   > sys_outb(0x64, 0xd4 = 0b11010100)
@@ -547,35 +494,35 @@
   > tickdelay(1 [16.7 ms])
   @utils.c:31, util_sys_inb
     sys_inb(port, &number)
-  > sys_inb(0x64, addr: 0xeffff64c)
-  < sys_inb(0x64, addr: 0xeffff64c [0x1c = 0b00011100])
+  > sys_inb(0x64, addr: 0xeffff63c)
+  < sys_inb(0x64, addr: 0xeffff63c [0x1c = 0b00011100])
   @kbc.c:95, write_command_byte
     sys_outb(KBD_ARGUMENT, convers)
   > sys_outb(0x60, 0xf5 = 0b11110101)
   @kbc.c:100, write_command_byte
     printf("New command byte - 0x%.2x\n",command_byte)
     "New command byte - 0xf5"
-  @mouse.c:69, read_return_from_mouse
+  @mouse.c:70, read_return_from_mouse
     micros_to_ticks(DELAY_US)
-  @mouse.c:69, read_return_from_mouse
+  @mouse.c:70, read_return_from_mouse
     tickdelay(micros_to_ticks(DELAY_US))
   > tickdelay(1 [16.7 ms])
   @utils.c:31, util_sys_inb
     sys_inb(port, &number)
-  > sys_inb(0x64, addr: 0xeffff648)
-  < sys_inb(0x64, addr: 0xeffff648 [0x3d = 0b00111101])
+  > sys_inb(0x64, addr: 0xeffff638)
+  < sys_inb(0x64, addr: 0xeffff638 [0x3d = 0b00111101])
   @utils.c:31, util_sys_inb
     sys_inb(port, &number)
-  > sys_inb(0x60, addr: 0xeffff648)
-  < sys_inb(0x60, addr: 0xeffff648 [0xfa = 0b11111010])
-  @mouse.c:105, read_return_from_mouse
+  > sys_inb(0x60, addr: 0xeffff638)
+  < sys_inb(0x60, addr: 0xeffff638 [0xfa = 0b11111010])
+  @mouse.c:106, read_return_from_mouse
     printf("Data reporting was successffully disabled\n")
     "Data reporting was successffully disabled"
-  @mouse.c:58, mouse_unsubscribe_interrupts
+  @mouse.c:59, mouse_unsubscribe_interrupts
     sys_irqrmpolicy(&hook)
-  > sys_irqrmpolicy(addr: 0x824a500 [10])
-  < sys_irqrmpolicy(addr: 0x824a500 [10]) -> (ret: 0)
-  @lab4.c:118, mouse_test_packet
+  > sys_irqrmpolicy(addr: 0x824a520 [10])
+  < sys_irqrmpolicy(addr: 0x824a520 [10]) -> (ret: 0)
+  @lab4.c:148, mouse_test_packet
     printf("Returning\n")
     "Returning"
 < mouse_test_packet(10) -> (ret: 0)

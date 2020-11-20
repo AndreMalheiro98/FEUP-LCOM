@@ -1,6 +1,8 @@
 #include <lcom/lcf.h>
 #include "mouse.h"
 int hook;
+uint8_t data;
+
 int (mouse_enable_data_report)(void){
     //Disable data reporting
     if(write_command(KBC_WRITE_TO_MOUSE)!=0)
@@ -25,12 +27,11 @@ int (mouse_enable_data_report)(void){
 }
 
 void (mouse_ih)(void){
-    printf("Mouse interrupt\n");
     uint8_t byte;
     
     if(util_sys_inb(KBD_STAT_REG,&byte)!=0)
         return ;
-    uint8_t data;
+    
     if(byte&KBD_OBF && byte&KBD_AUX)
     {
         if(util_sys_inb(KBD_OUT_BUF,&data)!=0)

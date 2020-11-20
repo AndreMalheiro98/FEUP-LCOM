@@ -29,6 +29,7 @@ int main(int argc, char *argv[]) {
 
   return 0;
 }
+extern uint8_t data;
 #include "mouse.h"
 #include "kbc.h"
 int (mouse_test_packet)(uint32_t cnt) {
@@ -44,14 +45,17 @@ int (mouse_test_packet)(uint32_t cnt) {
     printf("Error enabling data report\n");
     return -1;
   }
+
   
-  printf("k\n");
-  
+
   printf("GOing to interrupts\n");
   int ipc_status,r;
   message msg;
   uint32_t mask=BIT(MOUSE_IRQ);
   int aux=-1;
+  struct packet l;
+  //bool flag=0;
+  int bytes=0;
   while(cnt>0)
   {
     if( (r=driver_receive(ANY,&msg,&ipc_status)) !=0 )
@@ -68,12 +72,25 @@ int (mouse_test_packet)(uint32_t cnt) {
             if(aux!=-1)
             {
               mouse_ih();
-            
-              aux++;
-              if(aux==3)
+              if(data & BIT(3) && bytes==0)
               {
+                l.bytes[0]=data;
+                l.lb=data;
+                l.rb=data >> 1;
+                l.mb=data >> 2;
+                l.y_ov=data>>7;
+                l.x_ov=data>>6;
+                bytes++;
+              }
+              else{
+                l.bytes[bytes]=data;
+                bytes++;
+              }
+              if(bytes==3)
+              {
+                mouse_print_packet(&l);
+                bytes=0;
                 cnt--;
-                aux=0;
               }
             }
             else
