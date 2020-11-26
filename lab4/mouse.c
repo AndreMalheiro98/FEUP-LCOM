@@ -59,8 +59,8 @@ void (mouse_ih)(void){
         }
         flag=1;
     }
-    else if(!(byte & KBD_OBF))
-        printf("No data on output buffer\n");
+    else if(!(byte&KBD_OBF))   printf("No data on output buffer\n");
+    
         
     return ;
 }
@@ -117,7 +117,6 @@ int (read_return_from_mouse)(){
     switch(mouse_return_value)
     {
         case MOUSE_ACK:
-            printf("Mouse ACKNOWLEDGMENT\t");
             return 0;
         case MOUSE_NACK:
             printf("Mouse NACK error\t");
@@ -128,6 +127,53 @@ int (read_return_from_mouse)(){
         default:
             printf("Byte read is not a mouse error\t");
             return -1;
+    }
+    return 0;
+}
+
+int (read_data_from_mouse)(){
+    if(write_command(KBC_WRITE_TO_MOUSE)!=0)
+    {
+        printf("Can't write command to KBC after max number of tries (10)\n");
+        return -1;
+    }
+    else 
+    {
+        int n=0;
+        while(n<10)
+        {
+            if(write_command_byte(MOUSE_READ_DATA)==0)
+                break;
+        }
+        if(n==10)
+        {
+            printf("Can't command to KBC after max number of tries (10)\n");
+            return -1;
+        }
+        tickdelay(micros_to_ticks(DELAY_US));
+        
+    }
+
+    if(read_return_from_mouse()!=0)
+    {
+      printf("Error reading answer from mouse\n");
+      return -1;
+    }
+    return 0;
+}
+
+int (set_default_minix)(){
+    if(write_command(COMMAND_WRITE_BYTE_COMMAND)!=0)
+    {
+      printf("Error writing command 0x60 to KBC\n");
+      return -1;
+    }
+    uint8_t healthy_kbc_cb=minix_get_dflt_kbc_cmd_byte();
+    printf("0x%.2x\t",healthy_kbc_cb);
+    if(write_command_byte(healthy_kbc_cb)!=0)
+    {
+      printf("Error writing minix healthy command byte to Output Buffer\n");
+      return -1;
     }
     return 0;
 }

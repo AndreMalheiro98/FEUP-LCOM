@@ -36,6 +36,7 @@ extern uint32_t global_int_counter;
 
 #include "mouse.h"
 #include "kbc.h"
+#include <unistd.h>
 int (mouse_test_packet)(uint32_t cnt) {
   // Enabling stream mode
   if(mouse_enable_data_report()!=0)
@@ -251,6 +252,92 @@ int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) {
 
 int (mouse_test_remote)(uint16_t period, uint8_t cnt) {
     /* To be completed */
-    printf("%s(%u, %u): under construction\n", __func__, period, cnt);
-    return 1;
+    //LCF_start() already configures the mouse and the kbc correctly
+    int bytes=5;
+    uint8_t dados[3];
+    
+    
+    while(cnt>0)
+    {
+      if(bytes==5)
+      {
+        if(read_data_from_mouse()==-1)
+          return -1;
+        for(int i=0;i<3;i++)
+          dados[i]=0;
+        bytes=0;
+      }
+      mouse_ih();
+      
+      if(flag)
+      {
+        if(data & BIT(3) && bytes==0)
+          dados[0]=data;
+        else
+          dados[bytes]=data;
+        bytes++;
+      }
+      else
+        continue;
+      
+      if(bytes==3)
+      {
+        struct packet pacote_dados;
+        createMousePacket(dados,&pacote_dados);
+        mouse_print_packet(&pacote_dados);
+        cnt--;
+        bytes=5;
+        usleep(period*1000);
+      }
+    }
+
+    //Enabling Mouse stream mode
+    if(write_command(KBC_WRITE_TO_MOUSE)!=0)
+    {
+      printf("Error writing command 0xD4 to KBC\n");
+      return -1;
+    }
+
+    if(write_command_byte(MOUSE_SET_STREAM)!=0)
+    {
+      printf("Error writing command 0xEA to OutputBuffer\n");
+      return -1;
+    }
+
+    //Reading return byte from mouse due to writing byte to mouse
+    if(read_return_from_mouse()!=0)
+    {
+      printf("Error reading answer from mouse\n");
+      return -1;
+    }
+    else
+      printf("Mouse stream mode successfully enabled\n");
+
+    //Disabling mouse Data Report
+    if(write_command(KBC_WRITE_TO_MOUSE)!=0)
+    {
+      printf("Error writing command 0xD4 to KBC\n");
+      return -1;
+    }
+
+    if(write_command_byte(MOUSE_DISABLE_DATA_REPORT)!=0)
+    {
+      printf("Error writing command 0xF5 to OutputBuffer\n");
+      return -1;
+    }
+
+    //Reading return byte from mouse due to writing byte to mouse
+    if(read_return_from_mouse()!=0)
+    {
+      printf("Error reading answer from mouse\n");
+      return -1;
+    }
+    else
+      printf("Mouse data report successfully disabled\n");
+
+    if(set_default_minix()!=0)
+      return -1;
+    else  
+      printf("Minix default byte successfully wroten to KBC\n");
+    return 0;
 }

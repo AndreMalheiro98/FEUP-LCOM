@@ -11,4 +11,6 @@ void createMousePacket(uint8_t array[3],struct packet *pp);
 int (mouse_subscribe_interrupts)();
 int (mouse_unsubscribe_interrupts)();
 int (read_return_from_mouse)();
+int (read_data_from_mouse)();
+int(set_default_minix)();
 #endif
