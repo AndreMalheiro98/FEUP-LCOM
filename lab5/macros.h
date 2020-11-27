@@ -8,7 +8,11 @@
 #define VBE_MODE_3 0x11A
 #define VBE_MODE_4 0x14C
 #define VBE_TEXT_MODE 0x03
+
+//VBE CONSTANTS
 #define VBE_SET_MODE 0x4F02
 #define VBE_FUNCTIONS_AH 0x4F
+#define VBE_INTNO 0x10
+#define VBE_SET_MODE_FUNCTION 0x02
 
 #endif
