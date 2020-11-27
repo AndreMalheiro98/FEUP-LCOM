@@ -4,7 +4,10 @@
 #include <machine/int86.h>
 #include "macros.h"
 //FUNCTIONS
-int (vbe_set_visual_mode)(uint16_t mode);
-
+void * (vg_init)(uint16_t mode);
+int (vbe_return_mode_info)(uint16_t mode,vbe_mode_info_t *vmi_p);
+int (vbe_verify_mode)(uint16_t mode);
+int (vg_draw_rectangle)(uint16_t x,uint16_t y,uint16_t width, uint16_t height,uint32_t color);
+int (vg_draw_line)(uint16_t x,uint16_t y,uint16_t len,uint32_t color);
 
 #endif

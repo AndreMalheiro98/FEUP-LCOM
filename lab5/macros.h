@@ -14,5 +14,6 @@
 #define VBE_FUNCTIONS_AH 0x4F
 #define VBE_INTNO 0x10
 #define VBE_SET_MODE_FUNCTION 0x02
+#define VBE_GET_MODE_INFORMATION 0x01
 
 #endif

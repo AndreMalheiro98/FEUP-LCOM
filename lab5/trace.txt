@@ -1,0 +1,933 @@
+@lcflib.a:2019, lcf_start
+  video_test_rectangle(mode, x, y, width, height, color)
+> video_test_rectangle(0x110, 0, 0, 300, 300, 0x00003012 [12306])
+  @lab5.c:52, video_test_rectangle
+    vg_init(mode)
+  > vg_init(0x110)
+    @vbe.c:33, vg_init
+      vbe_get_mode_info(mode, &info)
+    > vbe_get_mode_info(0x110, addr: 0xeffff448)
+    < vbe_get_mode_info(0x110, addr: 0xeffff448 [0xe0000000, 640x480, 5:5:5 (15) <600 KiB>]) -> (ret: 0)
+    @vbe.c:47, vg_init
+      sys_privctl(SELF, SYS_PRIV_ADD_MEM, &mr)
+    > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff440 [0xe0000000 - 0xe0465000 <4.39453 MiB>])
+    < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &mr) -> (ret: 0)
+    @vbe.c:53, vg_init
+      vm_map_phys(SELF, (void *) mr.mr_base, vram_size)
+    < vm_map_phys(SELF, addr: 0xe0000000, 4.39453 MiB) -> (ret: 0xef596000)
+    @vbe.c:68, vg_init
+      sys_int86(&aux)
+    > sys_int86(addr: 0xeffff418 [AX: 4f02, BX: 4110, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+    < sys_int86(addr: 0xeffff418 [AX: 004f, BX: 4110, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  < vg_init(0x110) -> (ret: 0xef596000)
+  @lab5.c:57, video_test_rectangle
+    vg_draw_rectangle(x, y, width, height, color)
+  > vg_draw_rectangle(0, 0, 300, 300, 0x00003012 [12306])
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+    @vbe.c:101, vg_draw_line
+      printf("%d\n",bytes_per_pixel)
+      "1"
+  < vg_draw_rectangle(0, 0, 300, 300, 0x00003012 [12306]) -> (ret: 0)
+  @lab5.c:63, video_test_rectangle
+    sleep(5)
+  > sleep(5)
+  @lab5.c:66, video_test_rectangle
+    vg_exit()
+  < vg_exit() -> (ret: 0)
+< video_test_rectangle(0x110, 0, 0, 300, 300, 0x00003012 [12306]) -> (ret: 0)
