@@ -33,9 +33,16 @@ int main(int argc, char *argv[]) {
 }
 
 int(video_test_init)(uint16_t mode, uint8_t delay) {
-  
+  if(vbe_set_visual_mode(mode)!=0)
+    return -1;
+  sleep(delay);
+  if(vg_exit()!=0)
+  {
+    printf("Error setting text mode\n");
+    return -1;
+  }
 
-  return 1;
+  return 0;
 }
 
 int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y,
