@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include "vbe.h"
+#include "kbc.h"
 // Any header files included below this line should have been created by you
 
 int main(int argc, char *argv[]) {
@@ -45,9 +46,12 @@ int(video_test_init)(uint16_t mode, uint8_t delay) {
 
   return 0;
 }
-
+extern bool flag;
+extern uint8_t bytes[2];
 int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y,
                           uint16_t width, uint16_t height, uint32_t color) {
+  
+
   void * p;
   if((p=vg_init(mode))==NULL)
   {
@@ -56,11 +60,73 @@ int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y,
   }
   if(vg_draw_rectangle(x,y,width,height,color)!=0)
   {
-    printf("Error setting rectangle\n");
-    
+    printf("Error creating rectangle\n");
   }
   else{
-    sleep(5);
+    if(kbc_subscribe_interrupts()!=0)
+    {
+      printf("Error subscribing keyboard interrupts\n");
+      exit(1);
+    }
+    bool make=0;
+    int r,ipc_status;
+    message msg;
+    uint32_t mask=BIT(KBD_IRQ);
+    int x=1;
+    int i=0;
+    while(x)
+    {
+      if( (r=driver_receive(ANY,&msg,&ipc_status)) !=0 ) 
+      {
+        printf("driver_receive failed with %d",r);
+        continue;
+      }
+      if(is_ipc_notify(ipc_status)){
+        switch(_ENDPOINT_P(msg.m_source))
+        {
+          case HARDWARE:
+            if(msg.m_notify.interrupts & mask)
+            {
+              i++;
+              kbc_ih();
+              if(flag==1)
+              {
+                if(bytes[1]&BREAKCODE)
+                  make=0;
+                else
+                  make=1;
+                if(i==2)
+                {
+                  flag=0;
+                  i=0;
+                }
+                if(bytes[1]==ESC_KEY)
+                  x=0;
+              }
+              else
+              {
+                i=0;
+                if(bytes[0]&BREAKCODE)
+                  make=0;
+                else
+                  make=1;
+                flag=0;
+                if(bytes[0]==ESC_KEY)
+                  x=0;
+              }
+            }
+            break;
+          default:
+            break;
+        }
+      }
+  
+    }
+    if(kbc_unsubsribe_interrupts()!=0)
+    {
+      printf("Error unsubscribing keyboard interrupts\n");
+      exit(2);
+    }
   }
   
   if(vg_exit()!=0)

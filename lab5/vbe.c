@@ -1,8 +1,11 @@
 #include <lcom/lcf.h>
 #include "vbe.h"
-uint16_t hres,vres;
-void *video_mem;
-uint8_t bitsPerPixel;
+#include <float.h>
+static uint16_t hres,vres;
+static char *video_mem;
+static uint8_t bitsPerPixel;
+static uint modeL;
+static int count=0;
 int (vbe_verify_mode)(uint16_t mode)
 {
   switch(mode)
@@ -65,6 +68,7 @@ void * (vg_init)(uint16_t mode){
   aux.bx= BIT(14) | mode;
   aux.ah=VBE_FUNCTIONS_AH;
   aux.al=VBE_SET_MODE_FUNCTION;
+  modeL=mode;
   if(sys_int86(&aux) != OK){
     printf("VBE set mode failed\n");
     return NULL;
@@ -87,9 +91,13 @@ int (vg_draw_rectangle)(uint16_t x,uint16_t y,uint16_t width, uint16_t height,ui
     printf("Error: height or width values are out of bounds\n");
     return -1;
   }
+  if((x+width)>hres || (x+width)<0 || (y+height)>vres || (y+height)<0)
+  {
+    printf("Error: rectangle drawing would be out of bounds\n");
+    return -1;
+  }
   for(int i=0;i<height;i++)
   {
-    
    if(vg_draw_line(x,y+i,width,color)!=0)
     return -1;
   }
@@ -98,18 +106,17 @@ int (vg_draw_rectangle)(uint16_t x,uint16_t y,uint16_t width, uint16_t height,ui
 
 int (vg_draw_line)(uint16_t x,uint16_t y,uint16_t len,uint32_t color){
   int bytes_per_pixel=bitsPerPixel/8;
-  
-  char *pixel_address=(char *)video_mem+((y*hres+x)*(bytes_per_pixel));
-  
+  char *pixel_address=(char *)video_mem+(int)((y*hres+x)*(bytes_per_pixel));
   for(int i=0;i<len;i++)
   {
+    count ++;
     uint32_t color_aux=color;
     for(int j=0;j<bytes_per_pixel;j++)
     {
       *pixel_address=color_aux;
       pixel_address++;
       color_aux=color_aux>>8;
-    }  
+    } 
   }
   return 0;
 }
