@@ -2,3 +2,5 @@ lab5.o
 .gdbinit
 vbe.o
 lab5
+kbc.o
+utils.o
