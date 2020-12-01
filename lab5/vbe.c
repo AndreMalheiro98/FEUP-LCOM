@@ -3,9 +3,7 @@
 #include <float.h>
 static uint16_t hres,vres;
 static char *video_mem;
-static uint8_t bitsPerPixel;
-static uint modeL;
-static int count=0;
+static uint8_t bytesPerPixel;
 int (vbe_verify_mode)(uint16_t mode)
 {
   switch(mode)
@@ -40,9 +38,10 @@ void * (vg_init)(uint16_t mode){
   }
   struct minix_mem_range mr;
   unsigned int vram_base=info.PhysBasePtr;
-  unsigned int vram_size=info.BitsPerPixel*info.XResolution*info.YResolution;
+  bytesPerPixel=ceil(info.BitsPerPixel/8.0);
+  unsigned int vram_size=bytesPerPixel*info.XResolution*info.YResolution;
   hres=info.XResolution;
-  bitsPerPixel=info.BitsPerPixel;
+  
   vres=info.YResolution;
   mr.mr_base=(phys_bytes) vram_base;
   mr.mr_limit=vram_base+vram_size;
@@ -68,7 +67,6 @@ void * (vg_init)(uint16_t mode){
   aux.bx= BIT(14) | mode;
   aux.ah=VBE_FUNCTIONS_AH;
   aux.al=VBE_SET_MODE_FUNCTION;
-  modeL=mode;
   if(sys_int86(&aux) != OK){
     printf("VBE set mode failed\n");
     return NULL;
@@ -104,21 +102,21 @@ int (vg_draw_rectangle)(uint16_t x,uint16_t y,uint16_t width, uint16_t height,ui
   return 0;
 }
 
+void (vg_draw_pixel)(uint16_t x,uint16_t y,uint32_t color){
+  char *pixel_address=(char *)video_mem+(int)((y*hres+x)*(bytesPerPixel));
+  for(int j=0;j<bytesPerPixel;j++)
+  {
+    *pixel_address=color;
+    pixel_address++;
+    color=color>>8;
+  } 
+}
+
 int (vg_draw_line)(uint16_t x,uint16_t y,uint16_t len,uint32_t color){
-  int bytes_per_pixel=bitsPerPixel/8;
-  char *pixel_address=(char *)video_mem+(int)((y*hres+x)*(bytes_per_pixel));
   for(int i=0;i<len;i++)
   {
-    count ++;
-    uint32_t color_aux=color;
-    for(int j=0;j<bytes_per_pixel;j++)
-    {
-      *pixel_address=color_aux;
-      pixel_address++;
-      color_aux=color_aux>>8;
-    } 
+    vg_draw_pixel(x+i,y,color);
   }
   return 0;
 }
-
 

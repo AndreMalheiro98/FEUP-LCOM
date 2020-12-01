@@ -1,33 +1,33 @@
 @lcflib.a:2019, lcf_start
   video_test_rectangle(mode, x, y, width, height, color)
-> video_test_rectangle(0x110, 0, 0, 640, 480, 0x00001023 [4131])
+> video_test_rectangle(0x115, 50, 50, 400, 400, 0x10670123 [275185955])
   @lab5.c:56, video_test_rectangle
     vg_init(mode)
-  > vg_init(0x110)
-    @vbe.c:36, vg_init
+  > vg_init(0x115)
+    @vbe.c:34, vg_init
       vbe_get_mode_info(mode, &info)
-    > vbe_get_mode_info(0x110, addr: 0xeffff3d8)
-    < vbe_get_mode_info(0x110, addr: 0xeffff3d8 [0xe0000000, 640x480, 5:5:5 (15) <600 KiB>]) -> (ret: 0)
-    @vbe.c:50, vg_init
+    > vbe_get_mode_info(0x115, addr: 0xeffff3c8)
+    < vbe_get_mode_info(0x115, addr: 0xeffff3c8 [0xe0000000, 800x600, 8:8:8 (24) <1.37329 MiB>]) -> (ret: 0)
+    @vbe.c:49, vg_init
       sys_privctl(SELF, SYS_PRIV_ADD_MEM, &mr)
-    > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff3d0 [0xe0000000 - 0xe0465000 <4.39453 MiB>])
+    > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff3c0 [0xe0000000 - 0xe015f900 <1.37329 MiB>])
     < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &mr) -> (ret: 0)
-    @vbe.c:56, vg_init
+    @vbe.c:55, vg_init
       vm_map_phys(SELF, (void *) mr.mr_base, vram_size)
-    < vm_map_phys(SELF, addr: 0xe0000000, 4.39453 MiB) -> (ret: 0xef596000)
-    @vbe.c:72, vg_init
+    < vm_map_phys(SELF, addr: 0xe0000000, 1.37329 MiB) -> (ret: 0xef89b000)
+    @vbe.c:70, vg_init
       sys_int86(&aux)
-    > sys_int86(addr: 0xeffff3a8 [AX: 4f02, BX: 4110, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-    < sys_int86(addr: 0xeffff3a8 [AX: 004f, BX: 4110, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
-  < vg_init(0x110) -> (ret: 0xef596000)
+    > sys_int86(addr: 0xeffff398 [AX: 4f02, BX: 4115, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+    < sys_int86(addr: 0xeffff398 [AX: 004f, BX: 4115, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  < vg_init(0x115) -> (ret: 0xef89b000)
   @lab5.c:61, video_test_rectangle
     vg_draw_rectangle(x, y, width, height, color)
-  > vg_draw_rectangle(0, 0, 640, 480, 0x00001023 [4131])
-  < vg_draw_rectangle(0, 0, 640, 480, 0x00001023 [4131]) -> (ret: 0)
+  > vg_draw_rectangle(50, 50, 400, 400, 0x10670123 [275185955])
+  < vg_draw_rectangle(50, 50, 400, 400, 0x10670123 [275185955]) -> (ret: 0)
   @kbc.c:10, kbc_subscribe_interrupts
     sys_irqsetpolicy(KBD_IRQ, IRQ_REENABLE|IRQ_EXCLUSIVE, &hook)
-  > sys_irqsetpolicy(1, 3, addr: 0x824a070 [1])
-  < sys_irqsetpolicy(1, 3, addr: 0x824a070 [10]) -> (ret: 0)
+  > sys_irqsetpolicy(1, 3, addr: 0x824a150 [1])
+  < sys_irqsetpolicy(1, 3, addr: 0x824a150 [10]) -> (ret: 0)
   @lab5.c:79, video_test_rectangle
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff5d0, addr: 0xeffff618)
@@ -72,9 +72,9 @@
     < sys_inb(0x60, addr: 0xeffff4c0 [0x81 = 0b10000001])
   @kbc.c:16, kbc_unsubsribe_interrupts
     sys_irqrmpolicy(&hook)
-  > sys_irqrmpolicy(addr: 0x824a070 [10])
-  < sys_irqrmpolicy(addr: 0x824a070 [10]) -> (ret: 0)
+  > sys_irqrmpolicy(addr: 0x824a150 [10])
+  < sys_irqrmpolicy(addr: 0x824a150 [10]) -> (ret: 0)
   @lab5.c:132, video_test_rectangle
     vg_exit()
   < vg_exit() -> (ret: 0)
-< video_test_rectangle(0x110, 0, 0, 640, 480, 0x00001023 [4131]) -> (ret: 0)
+< video_test_rectangle(0x115, 50, 50, 400, 400, 0x10670123 [275185955]) -> (ret: 0)
