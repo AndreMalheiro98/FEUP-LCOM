@@ -1,9 +1,18 @@
 #include <lcom/lcf.h>
 #include "vbe.h"
 #include <float.h>
-static uint16_t hres,vres;
+static int hres,vres;
 static char *video_mem;
 static uint8_t bytesPerPixel;
+
+int get_vres()
+{
+  return vres;
+}
+
+int get_hres(){
+  return hres;
+}
 int (vbe_verify_mode)(uint16_t mode)
 {
   switch(mode)
@@ -24,7 +33,7 @@ int (vbe_verify_mode)(uint16_t mode)
   return 0;
 }
 
-void * (vg_init)(uint16_t mode){
+void * (vg_initi)(uint16_t mode,uint8_t *color){
   if(vbe_verify_mode(mode)!=0)
   {
     printf("Mode is not supported\n");
@@ -40,9 +49,14 @@ void * (vg_init)(uint16_t mode){
   unsigned int vram_base=info.PhysBasePtr;
   bytesPerPixel=ceil(info.BitsPerPixel/8.0);
   unsigned int vram_size=bytesPerPixel*info.XResolution*info.YResolution;
-  hres=info.XResolution;
-  
-  vres=info.YResolution;
+  hres=(int)info.XResolution;
+  *color=info.RedMaskSize;
+  *(color+1)=info.RedFieldPosition;
+  *(color+2)=info.GreenMaskSize;
+  *(color+3)=info.GreenFieldPosition;
+  *(color+4)=info.BlueMaskSize;
+  *(color+5)=info.BlueFieldPosition;
+  vres=(int)info.YResolution;
   mr.mr_base=(phys_bytes) vram_base;
   mr.mr_limit=vram_base+vram_size;
 
