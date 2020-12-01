@@ -31,7 +31,7 @@ void * (vg_init)(uint16_t mode){
     return NULL;
   }
   vbe_mode_info_t info;
-  if(vbe_get_mode_info(mode,&info)!=0)
+  if(vbe_return_mode_info(mode,&info)!=0)
   {
     printf("Error getting vbe mode info\n");
     return NULL;
@@ -80,6 +80,28 @@ int (vbe_return_mode_info)(uint16_t mode,vbe_mode_info_t *vmi_p){
     printf("Mode is not supported\n");
     return -1;
   }
+  mmap_t h;
+  if(lm_alloc(sizeof(vbe_mode_info_t),&h)==NULL)
+  {
+    printf("Error allocating memory for map\n");
+    return -1;
+  }
+  reg86_t aux;
+  memset(&aux,0,sizeof(aux));
+  aux.intno=VBE_INTNO;
+  aux.cx=mode;
+  aux.ah=VBE_FUNCTIONS_AH;
+  aux.al=VBE_GET_MODE_INFORMATION;
+  aux.ax=VBE_GET_MODE;
+  aux.es=PB2BASE(h.phys);
+  aux.di=PB2OFF(h.phys);
+  if(sys_int86(&aux)!=OK)
+  {
+    printf("Error in int86 function - get mode info\n");
+    return -1;
+  }
+  *vmi_p=*(vbe_mode_info_t *)h.virt;
+  lm_free(&h);
   return 0;
 }
 
