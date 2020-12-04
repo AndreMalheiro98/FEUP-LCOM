@@ -244,10 +244,92 @@ int(video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, ui
 }
 
 int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
-  /* To be completed */
-  printf("%s(%8p, %u, %u): under construction\n", __func__, xpm, x, y);
+  
+  void * p;
+  uint8_t colori[6];
+  if((p=vg_initi(VBE_MODE_0,colori))==NULL)
+  {
+    printf("Error setting mode\n");
+    return -1;
+  }
+  if(vg_draw_pixmap(xpm,x,y)!=0)
+  {
+    printf("Error drawing pixmap\n");
+  }
+  else{
+    if(kbc_subscribe_interrupts()!=0)
+    {
+      printf("Error subscribing keyboard interrupts\n");
+      exit(1);
+    }
+    bool make=0;
+    int r,ipc_status;
+    message msg;
+    uint32_t mask=BIT(KBD_IRQ);
+    int x=1;
+    int i=0;
+    while(x)
+    {
+      if( (r=driver_receive(ANY,&msg,&ipc_status)) !=0 ) 
+      {
+        printf("driver_receive failed with %d",r);
+        continue;
+      }
+      if(is_ipc_notify(ipc_status)){
+        switch(_ENDPOINT_P(msg.m_source))
+        {
+          case HARDWARE:
+            if(msg.m_notify.interrupts & mask)
+            {
+              i++;
+              kbc_ih();
+              if(flag==1)
+              {
+                if(bytes[1]&BREAKCODE)
+                  make=0;
+                else
+                  make=1;
+                if(i==2)
+                {
+                  flag=0;
+                  i=0;
+                }
+                if(bytes[1]==ESC_KEY)
+                  x=0;
+              }
+              else
+              {
+                i=0;
+                if(bytes[0]&BREAKCODE)
+                  make=0;
+                else
+                  make=1;
+                flag=0;
+                if(bytes[0]==ESC_KEY)
+                  x=0;
+              }
+            }
+            break;
+          default:
+            break;
+        }
+      }
+  
+    }
+    if(kbc_unsubsribe_interrupts()!=0)
+    {
+      printf("Error unsubscribing keyboard interrupts\n");
+      exit(2);
+    }
+  }
+  
+  if(vg_exit()!=0)
+  {
+    printf("Error setting text mode\n");
+    return -1;
+  }
 
-  return 1;
+  return 0;
 }
 
 int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint16_t yf,

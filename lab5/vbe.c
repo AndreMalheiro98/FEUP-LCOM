@@ -156,3 +156,36 @@ int (vg_draw_line)(uint16_t x,uint16_t y,uint16_t len,uint32_t color){
   return 0;
 }
 
+int (vg_draw_pixmap)(xpm_map_t xpm,int x,int y){
+  enum xpm_image_type type= XPM_INDEXED;
+  xpm_image_t img;
+  uint8_t *sprite= xpm_load(xpm,type,&img);
+  if(sprite==NULL)
+  {
+    printf("Error loading xpm\n");
+    return -1;
+  }
+  if((img.width+x) >hres || (img.width+x)<0 || (img.height+y)>vres || (img.height+y)<0)
+  {
+    printf("Error:Pixmap out of bounds\n");
+    return -1;
+  }
+  uint16_t actX,actY;
+  actX=x;
+  actY=y;
+  uint8_t *aux;
+  aux=sprite;
+  for(size_t i=0;i<img.size;i++){
+    uint32_t color=*(aux);
+    vg_draw_pixel(actX,actY,color);
+    actX++;
+    aux++;
+    if((actX-x)==img.width)
+    {
+      actY++;
+      actX=x;
+    }
+    
+  }
+  return 0;
+}
