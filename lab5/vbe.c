@@ -170,22 +170,24 @@ int (vg_draw_pixmap)(xpm_map_t xpm,int x,int y){
     printf("Error:Pixmap out of bounds\n");
     return -1;
   }
+
+  vg_display_pixmap(sprite,img,x,y);  
+  return 0;
+}
+
+void (vg_display_pixmap)(uint8_t *address,xpm_image_t img,int x,int y){
   uint16_t actX,actY;
   actX=x;
   actY=y;
-  uint8_t *aux;
-  aux=sprite;
   for(size_t i=0;i<img.size;i++){
-    uint32_t color=*(aux);
+    uint32_t color=*(address);
     vg_draw_pixel(actX,actY,color);
     actX++;
-    aux++;
+    address++;
     if((actX-x)==img.width)
     {
       actY++;
       actX=x;
     }
-    
   }
-  return 0;
 }
