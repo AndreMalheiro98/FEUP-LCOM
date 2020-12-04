@@ -342,8 +342,17 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
 }
 
 int(video_test_controller)() {
-  /* To be completed */
-  printf("%s(): under construction\n", __func__);
+  vg_vbe_contr_info_t c_info;
 
-  return 1;
+  if(get_vbe_contr_info(&c_info)){
+    printf("Error getting controller info\n");
+    return -1;
+  }
+
+  if(vg_display_vbe_contr_info(&c_info)){
+    printf("Error displaying controller info\n");
+    return -1;
+  }
+
+  return 0;
 }
