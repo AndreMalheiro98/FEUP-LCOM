@@ -61,6 +61,12 @@ int(proj_main_loop)(int argc, char *argv[]) {
 
     return print_usage();
   }
-
+  
+  sleep(delay);
+  if(vg_exit()!=0)
+  {
+    printf("Error setting text mode\n");
+    return -1;
+  }
   return proj_demo(mode, minix3_logo, grayscale, delay);
 }
