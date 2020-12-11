@@ -37,7 +37,7 @@ static int print_usage() {
 
   return 1;
 }
-
+#include "game.h"
 int(proj_main_loop)(int argc, char *argv[]) {
   /* 
    * Substitute the code below by your own
@@ -47,8 +47,8 @@ int(proj_main_loop)(int argc, char *argv[]) {
   // if you're interested, try to extend the command line options so that the usage becomes:
   // <mode - hex> <minix3 logo  - true|false> <grayscale - true|false> <delay (secs)>
   //
-  bool const minix3_logo = true;
-  bool const grayscale = false;
+  /*bool const minix3_logo = true;
+  bool const grayscale = false;*/
   uint8_t const delay = 5;
   uint16_t mode;
 
@@ -61,12 +61,14 @@ int(proj_main_loop)(int argc, char *argv[]) {
 
     return print_usage();
   }
-  
+  if( initMenu(mode)!=0)
+    return -1;
   sleep(delay);
   if(vg_exit()!=0)
   {
     printf("Error setting text mode\n");
     return -1;
   }
-  return proj_demo(mode, minix3_logo, grayscale, delay);
+  //return proj_demo(mode, minix3_logo, grayscale, delay);
+  return 0;
 }

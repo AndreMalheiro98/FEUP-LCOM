@@ -2,7 +2,6 @@
 #define _MACROS_H
 
 //VBE MODE CONSTANTS
-#define VBE_MODE_0 0x105
 #define VBE_MODE_1 0x110
 #define VBE_MODE_2 0x115
 #define VBE_MODE_3 0x11A

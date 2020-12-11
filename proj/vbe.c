@@ -17,16 +17,14 @@ int (vbe_verify_mode)(uint16_t mode)
 {
   switch(mode)
   {
-    case VBE_MODE_0:
-      break;
     case VBE_MODE_1:
-      break;
+      return 1;
     case VBE_MODE_2:
-      break;
+      return 2;
     case VBE_MODE_3:
-      break;
+      return 3;
     case VBE_MODE_4:
-      break;
+      return 4;
     default:
       return -1;
   }
@@ -34,7 +32,7 @@ int (vbe_verify_mode)(uint16_t mode)
 }
 
 void * (init_graphics_mode)(uint16_t mode,vbe_mode_info_t *info){
-  if(vbe_verify_mode(mode)!=0)
+  if(vbe_verify_mode(mode)==-1)
   {
     printf("Mode is not supported\n");
     return NULL;
@@ -82,7 +80,7 @@ void * (init_graphics_mode)(uint16_t mode,vbe_mode_info_t *info){
 }
 
 int (vbe_return_mode_info)(uint16_t mode,vbe_mode_info_t *vmi_p){
-  if(vbe_verify_mode(mode)!=0)
+  if(vbe_verify_mode(mode)==-1)
   {
     printf("Mode is not supported\n");
     return -1;
