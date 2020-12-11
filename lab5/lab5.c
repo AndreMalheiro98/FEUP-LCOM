@@ -344,7 +344,7 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
 int(video_test_controller)() {
   vg_vbe_contr_info_t c_info;
 
-  if(get_vbe_contr_info(&c_info)){
+  if(vbe_get_contr_info(&c_info)){
     printf("Error getting controller info\n");
     return -1;
   }

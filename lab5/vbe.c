@@ -192,17 +192,22 @@ void (vg_display_pixmap)(uint8_t *address,xpm_image_t img,int x,int y){
   }
 }
 
-int vbe_get_contr_info(vbe_mode_info_t *vmi_p){
+int vbe_get_contr_info(vg_vbe_contr_info_t *vmi_p){
   mmap_t h;
   if(lm_alloc(sizeof(vbe_mode_info_t),&h)==NULL)
   {
     printf("Error allocating memory for map\n");
     return -1;
   }
+  vmi_p->VBESignature[0]='V';
+  vmi_p->VBESignature[1]='B';
+  vmi_p->VBESignature[2]='E';
+  vmi_p->VBESignature[3]='2';
   reg86_t aux;
   memset(&aux,0,sizeof(aux));
   aux.intno=VBE_INTNO;
   aux.ah=VBE_FUNCTIONS_AH;
+  aux.ax=0x4F00;
   aux.al=VBE_GET_CTRL_INFORMATION;
   aux.es=PB2BASE(h.phys);
   aux.di=PB2OFF(h.phys);
@@ -211,16 +216,17 @@ int vbe_get_contr_info(vbe_mode_info_t *vmi_p){
     printf("Error in int86 function - get mode info\n");
     return -1;
   }
-  *vmi_p=*(vbe_mode_info_t *)h.virt;
-  memcpy(vmi_p->VbeSignature, vbe_block_info.VbeSignature, 4);
-  vmi_p->VbeVersion[0] = vbe_block_info.VbeVersion[0];
-  vmi_p->VbeVersion[1] = vbe_block_info.VbeVersion[1];
+  //VbeControllerInfo * vbe_block_info=(VbeControllerInfo * ) h.virt;
+  void *p=h.virt;
+  //memcpy(vmi_p->VbeSignature, vbe_block_info.VbeSignature, 4);
+  vmi_p-> VBEVersion[0] = (BCD)*(p+4);
+  /*vmi_p->VbeVersion[1] = vbe_block_info.VbeVersion[1];
   vmi_p->TotalMemory = vbe_block_info.TotalMemory * 64; //number of 64kb blocks
-  vmi_p->VideoModePtr = (uint16_t*) convert_far_ptr(vbe_block_info.videoModePTR, membase_ptr);
+  vmi_p->VideoModeList = (uint16_t*) convert_far_ptr(vbe_block_info.videoModePTR, membase_ptr);
   vmi_p->OEMString = (char*) convert_far_ptr(vbe_block_info.OEMStringPTR, membase_ptr);
   vmi_p->OEMVendorNamePtr = (char *) convert_far_ptr(vbe_block_info.OEMVendorNamePTR, membase_ptr);
   vmi_p->OEMProductNamePtr = (char*)convert_far_ptr(vbe_block_info.OEMProductNamePTR, membase_ptr);
-  vmi_p->OEMProductRevPtr = (char *) convert_far_ptr(vbe_block_info.OEMProductRevPTR, membase_ptr);
+  vmi_p->OEMProductRevPtr = (char *) convert_far_ptr(vbe_block_info.OEMProductRevPTR, membase_ptr);*/
   lm_free(&h);
   return 0;
 }
