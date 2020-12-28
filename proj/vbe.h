@@ -3,7 +3,7 @@
 #define _VBE_H
 #include <stdint.h>
 #include <machine/int86.h>
-#include "macros.h"
+#include "vbeMacros.h"
 #include <math.h>
 
 typedef struct{
@@ -14,7 +14,7 @@ typedef struct{
   
 }VbeInfoBlock;
 //FUNCTIONS
-void * (vg_initi)(uint16_t mode,uint8_t *color);
+void * (init_graphics_mode)(uint16_t mode,vbe_mode_info_t *info);
 int (vbe_return_mode_info)(uint16_t mode,vbe_mode_info_t *vmi_p);
 int (vbe_verify_mode)(uint16_t mode);
 int (vg_draw_rectangle)(uint16_t x,uint16_t y,uint16_t width, uint16_t height,uint32_t color);

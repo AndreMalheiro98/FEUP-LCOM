@@ -3,3 +3,4 @@ proj
 proj.o
 vbe.o
 game.o
+menu.o

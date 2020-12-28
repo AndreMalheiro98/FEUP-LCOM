@@ -148,7 +148,7 @@ int (vg_draw_line)(uint16_t x,uint16_t y,uint16_t len,uint32_t color){
 }
 
 int (vg_draw_pixmap)(xpm_map_t xpm,int x,int y){
-  enum xpm_image_type type= XPM_INDEXED;
+  enum xpm_image_type type= XPM_8_8_8_8;
   xpm_image_t img;
   uint8_t *sprite= xpm_load(xpm,type,&img);
   if(sprite==NULL)
@@ -158,7 +158,7 @@ int (vg_draw_pixmap)(xpm_map_t xpm,int x,int y){
   }
   if((img.width+x) >hres || (img.width+x)<0 || (img.height+y)>vres || (img.height+y)<0)
   {
-    printf("Error:Pixmap out of bounds\n");
+    printf("Error:Pixmap out of bounds %d %d %d %d\n",img.width+x,hres,img.height+y,vres);
     return -1;
   }
 

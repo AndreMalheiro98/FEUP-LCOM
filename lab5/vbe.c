@@ -192,10 +192,6 @@ void (vg_display_pixmap)(uint8_t *address,xpm_image_t img,int x,int y){
   }
 }
 
-<<<<<<< HEAD
-int (pixmap_animation)(xpm_map_t xpm,int x,int y){
-  
-=======
 int vbe_get_contr_info(vg_vbe_contr_info_t *vmi_p){
   mmap_t h;
   if(lm_alloc(sizeof(vbe_mode_info_t),&h)==NULL)
@@ -232,6 +228,5 @@ int vbe_get_contr_info(vg_vbe_contr_info_t *vmi_p){
   vmi_p->OEMProductNamePtr = (char*)convert_far_ptr(vbe_block_info.OEMProductNamePTR, membase_ptr);
   vmi_p->OEMProductRevPtr = (char *) convert_far_ptr(vbe_block_info.OEMProductRevPTR, membase_ptr);*/
   lm_free(&h);
->>>>>>> ba2c2017aa0d4f94ab0ba658ced90c36eb8013bb
   return 0;
 }

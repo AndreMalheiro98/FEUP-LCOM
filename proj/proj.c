@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
 }
 
 static int print_usage() {
-  printf("Usage: <mode - hex>\n");
+  printf("Usage: ./lcom_run proj\n");
 
   return 1;
 }
@@ -50,18 +50,18 @@ int(proj_main_loop)(int argc, char *argv[]) {
   /*bool const minix3_logo = true;
   bool const grayscale = false;*/
   uint8_t const delay = 5;
-  uint16_t mode;
+  //uint16_t mode;
 
-  if (argc != 1)
+  if (argc !=0)
     return print_usage();
-
+/*
   // parse mode info (it has some limitations for the sake of simplicity)
   if (sscanf(argv[0], "%hx", &mode) != 1) {
     printf("%s: invalid mode (%s)\n", __func__, argv[0]);
 
     return print_usage();
-  }
-  if( initMenu(mode)!=0)
+  }*/
+  if( initGraphics()!=0)
     return -1;
   sleep(delay);
   if(vg_exit()!=0)
