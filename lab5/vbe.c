@@ -191,3 +191,8 @@ void (vg_display_pixmap)(uint8_t *address,xpm_image_t img,int x,int y){
     }
   }
 }
+
+int (pixmap_animation)(xpm_map_t xpm,int x,int y){
+  
+  return 0;
+}
