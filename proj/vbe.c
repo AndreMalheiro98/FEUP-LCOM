@@ -17,46 +17,37 @@ int (vbe_verify_mode)(uint16_t mode)
 {
   switch(mode)
   {
-    case VBE_MODE_0:
-      break;
     case VBE_MODE_1:
-      break;
+      return 1;
     case VBE_MODE_2:
-      break;
+      return 2;
     case VBE_MODE_3:
-      break;
+      return 3;
     case VBE_MODE_4:
-      break;
+      return 4;
     default:
       return -1;
   }
   return 0;
 }
 
-void * (vg_initi)(uint16_t mode,uint8_t *color){
-  if(vbe_verify_mode(mode)!=0)
+void * (init_graphics_mode)(uint16_t mode,vbe_mode_info_t *info){
+  if(vbe_verify_mode(mode)==-1)
   {
     printf("Mode is not supported\n");
     return NULL;
   }
-  vbe_mode_info_t info;
-  if(vbe_return_mode_info(mode,&info)!=0)
+  if(vbe_return_mode_info(mode,info)!=0)
   {
     printf("Error getting vbe mode info\n");
     return NULL;
   }
   struct minix_mem_range mr;
-  unsigned int vram_base=info.PhysBasePtr;
-  bytesPerPixel=ceil(info.BitsPerPixel/8.0);
-  unsigned int vram_size=bytesPerPixel*info.XResolution*info.YResolution;
-  hres=(int)info.XResolution;
-  *color=info.RedMaskSize;
-  *(color+1)=info.RedFieldPosition;
-  *(color+2)=info.GreenMaskSize;
-  *(color+3)=info.GreenFieldPosition;
-  *(color+4)=info.BlueMaskSize;
-  *(color+5)=info.BlueFieldPosition;
-  vres=(int)info.YResolution;
+  unsigned int vram_base=info->PhysBasePtr;
+  bytesPerPixel=ceil(info->BitsPerPixel/8.0);
+  unsigned int vram_size=bytesPerPixel*info->XResolution*info->YResolution;
+  hres=(int)info->XResolution;
+  vres=(int)info->YResolution;
   mr.mr_base=(phys_bytes) vram_base;
   mr.mr_limit=vram_base+vram_size;
 
@@ -89,7 +80,7 @@ void * (vg_initi)(uint16_t mode,uint8_t *color){
 }
 
 int (vbe_return_mode_info)(uint16_t mode,vbe_mode_info_t *vmi_p){
-  if(vbe_verify_mode(mode)!=0)
+  if(vbe_verify_mode(mode)==-1)
   {
     printf("Mode is not supported\n");
     return -1;
@@ -192,26 +183,17 @@ void (vg_display_pixmap)(uint8_t *address,xpm_image_t img,int x,int y){
   }
 }
 
-<<<<<<< HEAD
-int (pixmap_animation)(xpm_map_t xpm,int x,int y){
-  
-=======
-int vbe_get_contr_info(vg_vbe_contr_info_t *vmi_p){
-  mmap_t h;
+int vbe_get_contr_info(vbe_mode_info_t *vmi_p){
+/*  mmap_t h;
   if(lm_alloc(sizeof(vbe_mode_info_t),&h)==NULL)
   {
     printf("Error allocating memory for map\n");
     return -1;
   }
-  vmi_p->VBESignature[0]='V';
-  vmi_p->VBESignature[1]='B';
-  vmi_p->VBESignature[2]='E';
-  vmi_p->VBESignature[3]='2';
   reg86_t aux;
   memset(&aux,0,sizeof(aux));
   aux.intno=VBE_INTNO;
   aux.ah=VBE_FUNCTIONS_AH;
-  aux.ax=0x4F00;
   aux.al=VBE_GET_CTRL_INFORMATION;
   aux.es=PB2BASE(h.phys);
   aux.di=PB2OFF(h.phys);
@@ -220,18 +202,16 @@ int vbe_get_contr_info(vg_vbe_contr_info_t *vmi_p){
     printf("Error in int86 function - get mode info\n");
     return -1;
   }
-  //VbeControllerInfo * vbe_block_info=(VbeControllerInfo * ) h.virt;
-  void *p=h.virt;
-  //memcpy(vmi_p->VbeSignature, vbe_block_info.VbeSignature, 4);
-  vmi_p-> VBEVersion[0] = (BCD)*(p+4);
-  /*vmi_p->VbeVersion[1] = vbe_block_info.VbeVersion[1];
+  *vmi_p=*(vbe_mode_info_t *)h.virt;
+  memcpy(vmi_p->VbeSignature, vbe_block_info.VbeSignature, 4);
+  vmi_p->VbeVersion[0] = vbe_block_info.VbeVersion[0];
+  vmi_p->VbeVersion[1] = vbe_block_info.VbeVersion[1];
   vmi_p->TotalMemory = vbe_block_info.TotalMemory * 64; //number of 64kb blocks
-  vmi_p->VideoModeList = (uint16_t*) convert_far_ptr(vbe_block_info.videoModePTR, membase_ptr);
+  vmi_p->VideoModePtr = (uint16_t*) convert_far_ptr(vbe_block_info.videoModePTR, membase_ptr);
   vmi_p->OEMString = (char*) convert_far_ptr(vbe_block_info.OEMStringPTR, membase_ptr);
   vmi_p->OEMVendorNamePtr = (char *) convert_far_ptr(vbe_block_info.OEMVendorNamePTR, membase_ptr);
   vmi_p->OEMProductNamePtr = (char*)convert_far_ptr(vbe_block_info.OEMProductNamePTR, membase_ptr);
-  vmi_p->OEMProductRevPtr = (char *) convert_far_ptr(vbe_block_info.OEMProductRevPTR, membase_ptr);*/
-  lm_free(&h);
->>>>>>> ba2c2017aa0d4f94ab0ba658ced90c36eb8013bb
+  vmi_p->OEMProductRevPtr = (char *) convert_far_ptr(vbe_block_info.OEMProductRevPTR, membase_ptr);
+  lm_free(&h);*/
   return 0;
 }

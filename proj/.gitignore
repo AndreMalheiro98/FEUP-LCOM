@@ -1,0 +1,5 @@
+.gdbinit
+proj
+proj.o
+vbe.o
+game.o
