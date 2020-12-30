@@ -177,3 +177,49 @@ int (set_default_minix)(){
     }
     return 0;
 }
+
+int (start_mouse)(){
+    // Enabling stream mode
+    if(mouse_enable_data_report()!=0)
+    {
+        printf("Error enabling data report\n");
+        return -1;
+    }
+    //Subscribing mouse interrupts
+    if(mouse_subscribe_interrupts()==-1)
+    {
+        printf("Error subscribing mouse interrupts\n");
+        return -1;
+    }
+    return 0;
+}
+
+int (disable_mouse)(){
+    //Unsubscribing mouse interrupts
+    if(mouse_unsubscribe_interrupts()==-1)
+    {
+        printf("Error unsubscribing mouse interrupts\n");
+        return -1;
+    }
+    //Disable data reporting
+    if(write_command(KBC_WRITE_TO_MOUSE)!=0)
+    {
+        printf("Error writing command 0xD4 to KBC\n");
+        return -1;
+    }
+
+    if(write_command_byte(MOUSE_DISABLE_DATA_REPORT)!=0)
+    {
+        printf("Error writing command 0xF5 to mouse\n");
+        return -1;
+    }
+
+    //Reading return byte from mouse due to writing byte to mouse
+    if(read_return_from_mouse()!=0)
+    {
+        printf("Error reading answer from mouse\n");
+        return -1;
+  }
+  else
+    printf("Data report successfully disabled\n");
+}

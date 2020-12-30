@@ -6,5 +6,6 @@
 #include "kbc.h"
 #include "timer.h"
 int initGraphics();
-int start_components();
+int subscribe_periphericals();
+int unsubscribe_periphericals();
 #endif

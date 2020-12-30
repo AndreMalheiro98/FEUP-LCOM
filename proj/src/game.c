@@ -15,7 +15,14 @@ int initGraphics(){
   return 0;
 }
 
-int start_components(){
-  
+int subscribe_periphericals(){
+  if(start_mouse()!=0)
+    return -1;
+  return 0;
+}
+
+int unsubscripe_periphericals(){
+  if(disable_mouse()!=0)
+    return -1;
   return 0;
 }

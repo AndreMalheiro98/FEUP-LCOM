@@ -16,4 +16,6 @@ int (mouse_unsubscribe_interrupts)();
 int (read_return_from_mouse)();
 int (read_data_from_mouse)();
 int(set_default_minix)();
+int (start_mouse)();
+int (disable_mouse)();
 #endif
