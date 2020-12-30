@@ -1,8 +1,11 @@
-#ifndef _MOUSE_H
-#define _MOUSE_H
+#ifndef MOUSE_H
+#define MOUSE_H
+#include <lcom/lcf.h>
 #include "kbc.h"
-#include <stdint.h>
 #include "i8042.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdint.h>
 
 
 int (mouse_enable_data_report)(void);

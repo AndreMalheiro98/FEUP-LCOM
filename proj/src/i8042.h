@@ -1,0 +1,63 @@
+#ifndef __I8042_H
+#define __I8042_H
+
+//#define BIT(n) (0x01<<(n))
+
+#define KBD_IRQ	1  /**< @brief Keyboard IRQ line */
+#define KBD_BIT 4 /* BIT SELECTOR FOR OUR INTERRUPTS */
+
+#define ESC_KEY 0x81
+
+#define DELAY_US	20000
+#define KBD_OUT_BUF		0x60
+#define KBD_IN_BUF 	0x60
+#define KBD_ARGUMENT 0x60
+#define KBD_STAT_REG 	0x64
+
+#define	KBD_CMD_ED 0xED
+#define BREAKCODE	BIT(7)
+#define KB_ACK 0xFA
+
+#define KB_TWO_BYTES_SCANCODE_FIRST_BYTE 0xE0
+
+#define KBD_OBF BIT(0)
+#define KBD_IBF BIT(1)
+#define KBD_AUX BIT(5)
+#define KBD_TO_ERR BIT(6)
+#define KBD_PAR_ERR  BIT(7)
+
+//COMMANDS FOR KEYBOARD
+
+#define HEALTHY_COMMAND_BYTE 0X47
+#define COMMAND_READ_BYTE_COMMAND 0x20
+#define COMMAND_WRITE_BYTE_COMMAND 0x60
+#define KBC_WRITE_TO_MOUSE 0xD4
+
+//MOUSE
+
+#define MOUSE_IRQ 12
+#define MOUSE_LB BIT(0)
+#define MOUSE_RB BIT(1)
+#define MOUSE_MB BIT(2)
+#define MOUSE_MSB_X_DELTA BIT(4)
+#define MOUSE_MSB_Y_DELTA BIT(5)
+#define MOUSE_X_OVF BIT(6)
+#define MOUSE_Y_OVF BIT(7)
+//COMMANDS FOR MOUSE
+#define MOUSE_RESET 0xFF
+#define MOUSE_RESEND 0xFE
+#define MOUSE_SET_DEFAULT 0xF6
+#define MOUSE_ENABLE_DATA_REPORT 0xF4
+#define MOUSE_DISABLE_DATA_REPORT 0xF5
+#define MOUSE_SET_STREAM 0xEA
+#define MOUSE_READ_DATA 0xEB
+//MOUSE ERRORS
+#define MOUSE_ACK 0xFA
+#define MOUSE_NACK 0xFE
+#define MOUSE_ERROR 0xFC
+
+
+
+
+
+#endif /* __I8042_H */

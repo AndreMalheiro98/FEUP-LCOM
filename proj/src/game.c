@@ -14,3 +14,8 @@ int initGraphics(){
   }
   return 0;
 }
+
+int start_components(){
+  
+  return 0;
+}

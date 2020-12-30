@@ -4,3 +4,7 @@ proj.o
 vbe.o
 game.o
 menu.o
+mouse.o
+kbc.o
+timer.o
+utils.o
