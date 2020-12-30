@@ -7,6 +7,15 @@
 #include <stdio.h>
 #include <stdint.h>
 
+typedef struct{
+    uint8_t x;
+    uint8_t y;
+    bool lb;
+    bool rb;
+    bool mb;
+}Mouse;
+
+
 
 int (mouse_enable_data_report)(void);
 void (mouse_ih)(void);
@@ -18,4 +27,7 @@ int (read_data_from_mouse)();
 int(set_default_minix)();
 int (start_mouse)();
 int (disable_mouse)();
+Mouse * create_mouse();
+Mouse * get_mouse();
+void eliminate_Mouse();
 #endif

@@ -61,14 +61,43 @@ int(proj_main_loop)(int argc, char *argv[]) {
 
     return print_usage();
   }*/
-  if( initGraphics()!=0)
-    return -1;
-  sleep(delay);
-  if(vg_exit()!=0)
+
+  //Enter graphic mode
+  if( game_init_graphics_mode()!=0)
   {
-    printf("Error setting text mode\n");
+    game_exit_graphic_mode();
     return -1;
   }
+
+  //Create game
+  Game *current_game=create_new_game();
+  if(current_game==NULL){
+    game_exit_graphic_mode();
+    return -1;
+  }
+
+  //Subscribe to periphericals
+  if(subscribe_periphericals()!=0){
+    game_exit_graphic_mode();
+    return -1;
+  }
+  //uint32_t mouse_mask=BIT(MOUSE_IRQ);
+
+
+  sleep(delay);
+
+  //Exiting graphic mode
+  if(game_exit_graphic_mode()!=0)
+    return -1;
+  
+  //Unsubscribing periphericals
+  if(unsubscribe_periphericals()!=0)
+    return -1;
+
+  //Eliminating game and whatnot - avoiding memory leaks by freeing allocated mem
+  eliminate_game();
+
+  
   //return proj_demo(mode, minix3_logo, grayscale, delay);
   return 0;
 }

@@ -1,5 +1,6 @@
 #include <lcom/lcf.h>
 #include "mouse.h"
+static Mouse *mouse=NULL;
 int hook;
 uint8_t data;
 bool flag=0;
@@ -219,7 +220,32 @@ int (disable_mouse)(){
     {
         printf("Error reading answer from mouse\n");
         return -1;
-  }
-  else
-    printf("Data report successfully disabled\n");
+    }
+    else
+        printf("Data report successfully disabled\n");
+    return 0;
+}
+
+Mouse * create_mouse(){
+    if(mouse==NULL)
+        mouse=(Mouse *)malloc(sizeof(Mouse));
+    else
+    {
+        printf("Error creating mouse\n");
+        return NULL;
+    }
+    mouse->x=0;
+    mouse->y=0;
+    mouse->rb=0;
+    mouse->mb=0;
+    mouse->rb=0;
+    return mouse;
+}
+
+Mouse * get_mouse(){
+    return mouse;
+}
+
+void eliminate_Mouse(){
+    free(mouse);
 }

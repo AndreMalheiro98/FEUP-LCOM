@@ -1,13 +1,1 @@
-B1=0x0f B2=0x00 B3=0x00 LB=1 MB=1 RB=1 XOV=0 X=0 YOV=0 Y=0
-B1=0x0f B2=0x00 B3=0x00 LB=1 MB=1 RB=1 XOV=0 X=0 YOV=0 Y=0
-B1=0x0f B2=0x00 B3=0x00 LB=1 MB=1 RB=1 XOV=0 X=0 YOV=0 Y=0
-B1=0x0f B2=0x00 B3=0x00 LB=1 MB=1 RB=1 XOV=0 X=0 YOV=0 Y=0
-B1=0x0b B2=0x00 B3=0x00 LB=1 MB=0 RB=1 XOV=0 X=0 YOV=0 Y=0
-B1=0x0b B2=0x00 B3=0x00 LB=1 MB=0 RB=1 XOV=0 X=0 YOV=0 Y=0
-B1=0x0b B2=0x00 B3=0x00 LB=1 MB=0 RB=1 XOV=0 X=0 YOV=0 Y=0
-B1=0x0b B2=0x00 B3=0x00 LB=1 MB=0 RB=1 XOV=0 X=0 YOV=0 Y=0
-B1=0x0b B2=0x00 B3=0x00 LB=1 MB=0 RB=1 XOV=0 X=0 YOV=0 Y=0
-B1=0x0b B2=0x00 B3=0x00 LB=1 MB=0 RB=1 XOV=0 X=0 YOV=0 Y=0
-Mouse stream mode successfully enabled
-Mouse data report successfully disabled
-0x47	Minix default byte successfully wroten to KBC
+Data report enabled successfully
