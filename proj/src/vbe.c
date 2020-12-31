@@ -1,6 +1,8 @@
 #include <lcom/lcf.h>
 #include "vbe.h"
 #include <float.h>
+
+
 static int hres,vres;
 static char *video_mem;
 static uint8_t bytesPerPixel;
@@ -226,4 +228,9 @@ int vbe_get_contr_info(vg_vbe_contr_info_t *vmi_p){
   vmi_p->OEMProductRevPtr = (char *) convert_far_ptr(vbe_block_info.OEMProductRevPTR, membase_ptr);
   lm_free(&h);*/
   return 0;
+}
+
+uint8_t * load_pixmap(xpm_map_t xpm,xpm_image_t *img){
+  enum xpm_image_type type=XPM_8_8_8_8;
+  return xpm_load(xpm,type,img);
 }

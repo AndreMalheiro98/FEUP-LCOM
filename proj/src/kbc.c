@@ -1,5 +1,6 @@
 #include <lcom/lcf.h>
 #include "kbc.h"
+#include "i8042.h"
 extern uint32_t number_sysinb_calls;
 
 int hook;

@@ -38,16 +38,22 @@ Game * create_new_game(){
     game=(Game *)malloc(sizeof(Game));
   else
     nu=1;
-  game->game_mouse=create_mouse();
+  game->game_mouse=get_mouse();
   if(game->game_mouse==NULL || nu==1)
   {
     printf("Error creating game\n");
     return NULL;
   }
+  game->game_mouse->x=get_hres()/2;
+  game->game_mouse->y=get_vres()/2;
   return game;
 }
 
 void eliminate_game(){
   eliminate_Mouse();
   free(game);
+}
+
+void update_mouse_coord(struct packet data){
+  
 }

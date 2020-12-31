@@ -38,6 +38,8 @@ static int print_usage() {
   return 1;
 }
 #include "game.h"
+extern uint8_t mouse_data;
+extern bool mouse_flag;
 int(proj_main_loop)(int argc, char *argv[]) {
   /* 
    * Substitute the code below by your own
@@ -81,9 +83,52 @@ int(proj_main_loop)(int argc, char *argv[]) {
     game_exit_graphic_mode();
     return -1;
   }
-  //uint32_t mouse_mask=BIT(MOUSE_IRQ);
+  load_main_menu();
+  /*uint32_t mouse_mask=BIT(MOUSE_IRQ);
 
+  //main cycle for interrupts
+  uint8_t mouse_dados[3],mouse_bytes;
+  message msg;
+  int r,ipc_status;
+  mouse_bytes=0;
+  while(1){
+    if((r=driver_receive(ANY,&msg,&ipc_status)) !=0){
+      printf("Driver receive failed with %d",r);
+      continue;
+    }
+    if(is_ipc_notify(ipc_status)){
+      switch (_ENDPOINT_P(msg.m_source))
+      {
+      case HARDWARE:
+        if(msg.m_notify.interrupts & mouse_mask){ //Mouse interrupts
+          mouse_ih();
+          if(mouse_flag)
+          {
+            if(mouse_data & BIT(3) && mouse_bytes==0)
+              mouse_dados[0]=mouse_data;
+            else
+              mouse_dados[bytes]=mouse_data;
+            mouse_bytes++;
+          }
+          else
+            continue;
+          
+          if(bytes==3)
+          {
+            struct packet pacote_dados;
+            createMousePacket(mouse_dados,&pacote_dados);
+            mouse_bytes=0;
 
+          }
+        }
+        break;
+      
+      default:
+        break;
+      }
+    }
+  }
+*/
   sleep(delay);
 
   //Exiting graphic mode

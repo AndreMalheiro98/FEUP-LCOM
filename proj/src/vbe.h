@@ -26,4 +26,5 @@ int (pixmap_animation)(xpm_map_t xpm,int x,int y);
 int vbe_get_contr_info(vg_vbe_contr_info_t *vmi_p);
 int get_vres();
 int get_hres();
+uint8_t *load_pixmap(xpm_map_t xpm,xpm_image_t *img);
 #endif

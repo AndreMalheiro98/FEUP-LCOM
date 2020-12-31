@@ -1,14 +1,10 @@
 #include <lcom/lcf.h>
 #include "timer.h"
-
-#include <stdint.h>
-
 #include "i8254.h"
 int timer_tick_counter=0;
 int var=TIMER0_IRQ;
 int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
-  /* To be implemented by the students */
-  printf("%s is not yet implemented!\n", __func__);
+  
   uint8_t defaul;
   if(timer_get_conf(timer,&defaul)!=0)
     return 1;
@@ -26,7 +22,7 @@ int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
 }
 
 int (timer_subscribe_int)(uint8_t *bit_no) {
-    /* To be implemented by the students */
+    
   var=TIMER0_IRQ;
   *bit_no=(uint8_t )var;
   if(sys_irqsetpolicy(TIMER0_IRQ,IRQ_REENABLE,&var)!=OK)
@@ -35,20 +31,20 @@ int (timer_subscribe_int)(uint8_t *bit_no) {
 }
 
 int (timer_unsubscribe_int)() {
-  /* To be implemented by the students */
+  
   if(sys_irqrmpolicy(&var)!=OK)
     return 1;
   return 0;
 }
 
 void (timer_int_handler)() {
-  /* To be implemented by the students */ 
+  
   timer_tick_counter++;
 }
 
 int (timer_get_conf)(uint8_t timer, uint8_t *st) {
   
-  //printf("%s is not yet implemented!\n", __func__);
+  
   if(timer<0 || timer>2)
     exit(-1);
   uint8_t port;
@@ -91,7 +87,7 @@ int (timer_display_conf)(uint8_t timer, uint8_t st,
     perror("Error on timer_status_field");
     return 1;
   }
-  //printf("%s is not yet implemented!\n", __func__);
+  
   if(timer_print_config(timer,field,value)!=0)
   {
     perror("Erron on printing timer config");

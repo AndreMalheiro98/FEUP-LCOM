@@ -1,11 +1,15 @@
 #include <lcom/lcf.h>
 #include "mouse.h"
+#include "kbc.h"
+#include "i8042.h"
+#include "vbe.h"
+#include "../Images/aim.xpm"
 static Mouse *mouse=NULL;
 int hook;
-uint8_t data;
-bool flag=0;
+uint8_t mouse_data;
+bool mouse_flag=0;
 int (mouse_enable_data_report)(void){
-    //Disable data reporting
+    //Disable mouse_data reporting
     int i=0;
     for(i=0;i<3;i++){
         tickdelay(micros_to_ticks(DELAY_US));
@@ -37,7 +41,7 @@ int (mouse_enable_data_report)(void){
 
 void (mouse_ih)(void){
     uint8_t byte;
-    flag=0;
+    mouse_flag=0;
     if(util_sys_inb(KBD_STAT_REG,&byte)!=0)
     {
         printf("error reading status register\n");
@@ -47,20 +51,20 @@ void (mouse_ih)(void){
     if(byte&KBD_OBF && byte&KBD_AUX)
     {
         
-        if(util_sys_inb(KBD_OUT_BUF,&data)!=0)
+        if(util_sys_inb(KBD_OUT_BUF,&mouse_data)!=0)
         {
-            printf("Error reading mouse data\n");
+            printf("Error reading mouse mouse_data\n");
             return ;
         }
         
         if(byte&KBD_TO_ERR || byte&KBD_PAR_ERR)
         {
-            printf("Data has error., discarding\n");
+            printf("mouse_data has error., discarding\n");
             return ;
         }
-        flag=1;
+        mouse_flag=1;
     }
-    else if(!(byte&KBD_OBF))   printf("No data on output buffer\n");
+    else if(!(byte&KBD_OBF))   printf("No mouse_data on output buffer\n");
     
         
     return ;
@@ -183,7 +187,7 @@ int (start_mouse)(){
     // Enabling stream mode
     if(mouse_enable_data_report()!=0)
     {
-        printf("Error enabling data report\n");
+        printf("Error enabling mouse_data report\n");
         return -1;
     }
     //Subscribing mouse interrupts
@@ -202,7 +206,7 @@ int (disable_mouse)(){
         printf("Error unsubscribing mouse interrupts\n");
         return -1;
     }
-    //Disable data reporting
+    //Disable mouse_data reporting
     if(write_command(KBC_WRITE_TO_MOUSE)!=0)
     {
         printf("Error writing command 0xD4 to KBC\n");
@@ -222,30 +226,25 @@ int (disable_mouse)(){
         return -1;
     }
     else
-        printf("Data report successfully disabled\n");
+        printf("mouse_data report successfully disabled\n");
     return 0;
 }
 
-Mouse * create_mouse(){
-    if(mouse==NULL)
-        mouse=(Mouse *)malloc(sizeof(Mouse));
-    else
-    {
-        printf("Error creating mouse\n");
-        return NULL;
-    }
-    mouse->x=0;
-    mouse->y=0;
-    mouse->rb=0;
-    mouse->mb=0;
-    mouse->rb=0;
-    return mouse;
-}
-
 Mouse * get_mouse(){
+    if(mouse==NULL)
+    {
+        mouse=(Mouse *)malloc(sizeof(Mouse));
+        if(load_pixmap(aim_xpm,&mouse->img)==NULL)
+            return NULL;
+    }
     return mouse;
 }
 
 void eliminate_Mouse(){
     free(mouse);
+}
+
+void mouse_update_position(struct packet data){
+    mouse->x+=data.delta_x;
+    mouse->y+=data.delta_y;
 }
