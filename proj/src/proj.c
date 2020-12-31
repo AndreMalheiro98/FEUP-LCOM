@@ -40,6 +40,7 @@ static int print_usage() {
 #include "game.h"
 extern uint8_t mouse_data;
 extern bool mouse_flag;
+extern int timer_tick_counter;
 int(proj_main_loop)(int argc, char *argv[]) {
   /* 
    * Substitute the code below by your own
@@ -51,7 +52,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
   //
   /*bool const minix3_logo = true;
   bool const grayscale = false;*/
-  uint8_t const delay = 5;
+  uint16_t const delay = 600;
   //uint16_t mode;
 
   if (argc !=0)
@@ -79,19 +80,20 @@ int(proj_main_loop)(int argc, char *argv[]) {
   }
 
   //Subscribe to periphericals
-  if(subscribe_periphericals()!=0){
+  uint32_t mouse_mask,timer_mask;
+  if(subscribe_periphericals(&mouse_mask,&timer_mask)!=0){
     game_exit_graphic_mode();
     return -1;
   }
+  
+
   draw_menu();
-  /*uint32_t mouse_mask=BIT(MOUSE_IRQ);
-  uint32_t timer_mask=BIT(TIMER0_IRQ);
   //main cycle for interrupts
   uint8_t mouse_dados[3],mouse_bytes;
   message msg;
   int r,ipc_status;
   mouse_bytes=0;
-  while(1){
+  while(timer_tick_counter<delay){
     if((r=driver_receive(ANY,&msg,&ipc_status)) !=0){
       printf("Driver receive failed with %d",r);
       continue;
@@ -107,19 +109,22 @@ int(proj_main_loop)(int argc, char *argv[]) {
             if(mouse_data & BIT(3) && mouse_bytes==0)
               mouse_dados[0]=mouse_data;
             else
-              mouse_dados[bytes]=mouse_data;
+              mouse_dados[mouse_bytes]=mouse_data;
             mouse_bytes++;
           }
           else
             continue;
           
-          if(bytes==3)
+          if(mouse_bytes==3)
           {
             struct packet pacote_dados;
             createMousePacket(mouse_dados,&pacote_dados);
             mouse_bytes=0;
-
+            update_mouse_coord(pacote_dados);
           }
+        }
+        else if(msg.m_notify.interrupts & timer_mask){//timer interrupts
+          timer_int_handler();
         }
         break;
       
@@ -128,8 +133,6 @@ int(proj_main_loop)(int argc, char *argv[]) {
       }
     }
   }
-*/
-  sleep(delay);
 
   //Exiting graphic mode
   if(game_exit_graphic_mode()!=0)

@@ -90,8 +90,9 @@ void createMousePacket(uint8_t array[3],struct packet *pp)
         pp->delta_y=array[2]; 
 }
 
-int (mouse_subscribe_interrupts)(){
+int (mouse_subscribe_interrupts)(uint32_t *bit_no){
     hook=MOUSE_IRQ;
+    *bit_no=BIT(hook);
     if(sys_irqsetpolicy(MOUSE_IRQ,IRQ_REENABLE | IRQ_EXCLUSIVE,&hook)!=OK)
         return -1;
     return 0;
@@ -183,7 +184,7 @@ int (set_default_minix)(){
     return 0;
 }
 
-int (start_mouse)(){
+int (start_mouse)(uint32_t * mouse_mask){
     // Enabling stream mode
     if(mouse_enable_data_report()!=0)
     {
@@ -191,7 +192,7 @@ int (start_mouse)(){
         return -1;
     }
     //Subscribing mouse interrupts
-    if(mouse_subscribe_interrupts()==-1)
+    if(mouse_subscribe_interrupts(mouse_mask)==-1)
     {
         printf("Error subscribing mouse interrupts\n");
         return -1;
@@ -246,5 +247,20 @@ void eliminate_Mouse(){
 
 void mouse_update_position(struct packet data){
     mouse->x+=data.delta_x;
-    mouse->y+=data.delta_y;
+    mouse->y-=data.delta_y;
+    if((mouse->x+mouse->img.width)>get_hres())
+    {
+        printf("x-%d\t",mouse->x);
+        mouse->x=get_hres()-mouse->img.width;
+    }
+    else if(mouse->x<0)
+        mouse->x=mouse->img.width/2;
+
+    if((mouse->y+mouse->img.height)>get_vres())
+    {
+        printf("y-%d\t",mouse->y);
+        mouse->y=get_vres()-mouse->img.height;
+    }
+    else if(mouse->y<0)
+        mouse->y=mouse->img.height/2;
 }

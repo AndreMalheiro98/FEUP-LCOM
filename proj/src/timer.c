@@ -21,9 +21,9 @@ int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
   return 0;
 }
 
-int (timer_subscribe_int)() {
-    
+int (timer_subscribe_int)(uint8_t *bit_no){
   var=TIMER0_IRQ;
+  *bit_no=var;
   if(sys_irqsetpolicy(TIMER0_IRQ,IRQ_REENABLE,&var)!=OK)
     return 1;
   return 0;

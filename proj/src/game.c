@@ -19,16 +19,30 @@ int game_exit_graphic_mode(){
   return 0;
 }
 
-int subscribe_periphericals(){
-  if(start_mouse()!=0)
+int subscribe_periphericals(uint32_t * mouse_mask,uint32_t * timer_mask){
+  if(start_mouse(mouse_mask)!=0)
     return -1;
+
+  uint8_t aux;
+  if(timer_subscribe_int(&aux)!=0)
+  {
+    printf("Error subscribing timer0 interrupts\n");
+    return -1;
+  }
+  *timer_mask=BIT(aux);
+
   return 0;
 }
 
 int unsubscribe_periphericals(){
   if(disable_mouse()!=0)
     return -1;
-    
+
+  if(timer_unsubscribe_int()!=0){
+    printf("Error unsubscribing timer0 interrupts\n");
+    return -1;
+  }
+
   return 0;
 }
 
@@ -55,7 +69,9 @@ void eliminate_game(){
 }
 
 void update_mouse_coord(struct packet data){
-  
+  mouse_update_position(data);
+  update_mouse(game->game_mouse->img,game->game_mouse->x,game->game_mouse->y);
+  refresh_screen();
 }
 
 int draw_screen(){
