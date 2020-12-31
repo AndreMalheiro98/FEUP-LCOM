@@ -119,7 +119,7 @@ int (write_command_byte)(uint8_t command_byte)
       printf("Error writing argument to port 0x60\n");
       continue;
     }
-    printf("New command byte - 0x%.2x\n",command_byte);
+    
     return 0;
     }
   }

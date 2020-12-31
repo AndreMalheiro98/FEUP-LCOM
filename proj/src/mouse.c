@@ -201,7 +201,7 @@ int (start_mouse)(uint32_t * mouse_mask){
 }
 
 int (disable_mouse)(){
-    printf("going to unsub\n");
+    
 
     //Unsubscribing mouse interrupts
     if(mouse_unsubscribe_interrupts()==-1)
@@ -210,7 +210,7 @@ int (disable_mouse)(){
         return -1;
     }
     empty_input_buffer();
-    printf("going to disable - command\n");
+    
     //Disable mouse_data reporting
     if(write_command(KBC_WRITE_TO_MOUSE)!=0)
     {
