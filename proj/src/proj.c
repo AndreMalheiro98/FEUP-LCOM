@@ -145,7 +145,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
   //Eliminating game and whatnot - avoiding memory leaks by freeing allocated mem
   eliminate_game();
 
-  
+  printf("Exit\n");
   //return proj_demo(mode, minix3_logo, grayscale, delay);
   return 0;
 }

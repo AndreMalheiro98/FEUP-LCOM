@@ -7,4 +7,5 @@
   int (write_command)(uint8_t command);
   int (write_command_byte)(uint8_t command_byte);
   int (read_from_output_buffer)(uint8_t *read_value);
+  void (empty_input_buffer)();
 #endif
