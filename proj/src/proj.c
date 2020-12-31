@@ -38,6 +38,9 @@ static int print_usage() {
   return 1;
 }
 #include "game.h"
+extern uint8_t mouse_data;
+extern bool mouse_flag;
+extern int timer_tick_counter;
 int(proj_main_loop)(int argc, char *argv[]) {
   /* 
    * Substitute the code below by your own
@@ -49,7 +52,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
   //
   /*bool const minix3_logo = true;
   bool const grayscale = false;*/
-  uint8_t const delay = 5;
+  uint16_t const delay = 600;
   //uint16_t mode;
 
   if (argc !=0)
@@ -61,14 +64,88 @@ int(proj_main_loop)(int argc, char *argv[]) {
 
     return print_usage();
   }*/
-  if( initGraphics()!=0)
-    return -1;
-  sleep(delay);
-  if(vg_exit()!=0)
+
+  //Enter graphic mode
+  if( game_init_graphics_mode()!=0)
   {
-    printf("Error setting text mode\n");
+    game_exit_graphic_mode();
     return -1;
   }
+
+  //Create game
+  Game *current_game=create_new_game();
+  if(current_game==NULL){
+    game_exit_graphic_mode();
+    return -1;
+  }
+
+  //Subscribe to periphericals
+  uint32_t mouse_mask,timer_mask;
+  if(subscribe_periphericals(&mouse_mask,&timer_mask)!=0){
+    game_exit_graphic_mode();
+    return -1;
+  }
+  
+
+  draw_menu();
+  //main cycle for interrupts
+  uint8_t mouse_dados[3],mouse_bytes;
+  message msg;
+  int r,ipc_status;
+  mouse_bytes=0;
+  while(timer_tick_counter<delay){
+    if((r=driver_receive(ANY,&msg,&ipc_status)) !=0){
+      printf("Driver receive failed with %d",r);
+      continue;
+    }
+    if(is_ipc_notify(ipc_status)){
+      switch (_ENDPOINT_P(msg.m_source))
+      {
+      case HARDWARE:
+        if(msg.m_notify.interrupts & mouse_mask){ //Mouse interrupts
+          mouse_ih();
+          if(mouse_flag)
+          {
+            if(mouse_data & BIT(3) && mouse_bytes==0)
+              mouse_dados[0]=mouse_data;
+            else
+              mouse_dados[mouse_bytes]=mouse_data;
+            mouse_bytes++;
+          }
+          else
+            continue;
+          
+          if(mouse_bytes==3)
+          {
+            struct packet pacote_dados;
+            createMousePacket(mouse_dados,&pacote_dados);
+            mouse_bytes=0;
+            update_mouse_coord(pacote_dados);
+          }
+        }
+        else if(msg.m_notify.interrupts & timer_mask){//timer interrupts
+          timer_int_handler();
+        }
+        break;
+      
+      default:
+        break;
+      }
+    }
+  }
+
+  //Exiting graphic mode
+  if(game_exit_graphic_mode()!=0)
+    return -1;
+  
+  //Unsubscribing periphericals
+  if(unsubscribe_periphericals()!=0)
+    return -1;
+
+  //Eliminating game and whatnot - avoiding memory leaks by freeing allocated mem
+  eliminate_game();
+
+  printf("Exit\n");
   //return proj_demo(mode, minix3_logo, grayscale, delay);
   return 0;
 }
