@@ -5,6 +5,9 @@
 
 static int hres,vres;
 static char *video_mem;
+static char *buffer;
+static char *mouse_buffer;
+static unsigned int video_mem_size;
 static uint8_t bytesPerPixel;
 
 int get_vres()
@@ -52,7 +55,7 @@ void * (init_graphics_mode)(uint16_t mode,vbe_mode_info_t *info){
   vres=(int)info->YResolution;
   mr.mr_base=(phys_bytes) vram_base;
   mr.mr_limit=vram_base+vram_size;
-
+  video_mem_size=vram_size;
   if(sys_privctl(SELF,SYS_PRIV_ADD_MEM,&mr)!=OK)
   {
     panic("sys_privctl ADD MEM failed\n");
@@ -60,7 +63,8 @@ void * (init_graphics_mode)(uint16_t mode,vbe_mode_info_t *info){
   }
   
   video_mem=vm_map_phys(SELF,(void *) mr.mr_base,vram_size);
-  
+  buffer= (char*)malloc(vram_size);
+  mouse_buffer=(char *)malloc(vram_size);
   if(video_mem==MAP_FAILED)
   {
     panic("Couldn't map video memory\n");
@@ -112,41 +116,15 @@ int (vbe_return_mode_info)(uint16_t mode,vbe_mode_info_t *vmi_p){
   return 0;
 }
 
-int (vg_draw_rectangle)(uint16_t x,uint16_t y,uint16_t width, uint16_t height,uint32_t color){
-  if(height>vres || width>hres || width<0 || height<0)
-  {
-    printf("Error: height or width values are out of bounds\n");
-    return -1;
-  }
-  if((x+width)>hres || (x+width)<0 || (y+height)>vres || (y+height)<0)
-  {
-    printf("Error: rectangle drawing would be out of bounds\n");
-    return -1;
-  }
-  for(int i=0;i<height;i++)
-  {
-   if(vg_draw_line(x,y+i,width,color)!=0)
-    return -1;
-  }
-  return 0;
-}
 
-void (vg_draw_pixel)(uint16_t x,uint16_t y,uint32_t color){
-  char *pixel_address=(char *)video_mem+(int)((y*hres+x)*(bytesPerPixel));
+void (vg_draw_pixel)(uint16_t x,uint16_t y,uint32_t color,char *end_buffer){
+  char *pixel_address=(char *)end_buffer+(int)((y*hres+x)*(bytesPerPixel));
   for(int j=0;j<bytesPerPixel;j++)
   {
     *pixel_address=color;
     pixel_address++;
     color=color>>8;
   } 
-}
-
-int (vg_draw_line)(uint16_t x,uint16_t y,uint16_t len,uint32_t color){
-  for(int i=0;i<len;i++)
-  {
-    vg_draw_pixel(x+i,y,color);
-  }
-  return 0;
 }
 
 int (vg_draw_pixmap)(xpm_map_t xpm,int x,int y){
@@ -164,11 +142,11 @@ int (vg_draw_pixmap)(xpm_map_t xpm,int x,int y){
     return -1;
   }
 
-  vg_display_pixmap(img,x,y);  
+  vg_display_pixmap(img,x,y,buffer);  
   return 0;
 }
 
-void (vg_display_pixmap)(xpm_image_t img,int x,int y){
+void (vg_display_pixmap)(xpm_image_t img,int x,int y,char * end_buffer){
   uint16_t actX,actY;
   actX=x;
   actY=y;
@@ -179,7 +157,8 @@ void (vg_display_pixmap)(xpm_image_t img,int x,int y){
     for(uint16_t j=0;j<img.width;j++)
     {
       uint32_t color=by[index];
-      vg_draw_pixel(actX,actY,color);
+      if(!(end_buffer==mouse_buffer && color==0))
+        vg_draw_pixel(actX,actY,color,end_buffer);
       actX++;
       index++;
     }
@@ -233,4 +212,13 @@ int vbe_get_contr_info(vg_vbe_contr_info_t *vmi_p){
 uint8_t * load_pixmap(xpm_map_t xpm,xpm_image_t *img){
   enum xpm_image_type type=XPM_8_8_8_8;
   return xpm_load(xpm,type,img);
+}
+
+void refresh_screen(){
+  memcpy(video_mem,mouse_buffer,video_mem_size);
+}
+
+void update_mouse(xpm_image_t mouse_img,int x,int y){
+  memcpy(mouse_buffer,buffer,video_mem_size);
+  vg_display_pixmap(mouse_img,x,y,mouse_buffer);
 }

@@ -16,4 +16,7 @@ int unsubscribe_periphericals();
 int game_exit_graphic_mode();
 Game * create_new_game();
 void eliminate_game();
+void update_mouse_coord(struct packet data);
+int draw_screen();
+int draw_menu();
 #endif

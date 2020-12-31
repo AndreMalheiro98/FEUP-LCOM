@@ -83,9 +83,9 @@ int(proj_main_loop)(int argc, char *argv[]) {
     game_exit_graphic_mode();
     return -1;
   }
-  load_main_menu();
+  draw_menu();
   /*uint32_t mouse_mask=BIT(MOUSE_IRQ);
-
+  uint32_t timer_mask=BIT(TIMER0_IRQ);
   //main cycle for interrupts
   uint8_t mouse_dados[3],mouse_bytes;
   message msg;

@@ -57,3 +57,16 @@ void eliminate_game(){
 void update_mouse_coord(struct packet data){
   
 }
+
+int draw_screen(){
+  
+  return 0;
+}
+
+int draw_menu(){
+  if(load_main_menu()!=0)
+    return -1;
+  update_mouse(game->game_mouse->img,game->game_mouse->x,game->game_mouse->y);
+  refresh_screen();
+  return 0;
+}
