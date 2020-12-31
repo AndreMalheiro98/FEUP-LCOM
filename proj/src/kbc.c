@@ -4,7 +4,7 @@ extern uint32_t number_sysinb_calls;
 
 int hook;
 uint8_t bytes[2];
-bool flag;
+bool flag , is_two_bytes = 0;
 int poll_helper;
 int (kbc_subscribe_interrupts)(){ 
   hook=KBD_IRQ;
@@ -16,6 +16,19 @@ int (kbc_subscribe_interrupts)(){
 int (kbc_unsubsribe_interrupts)(){
   if(sys_irqrmpolicy(&hook)!=OK)
     return -1;
+  return 0;
+}
+uint8_t discard_mc(void) {
+
+  uint8_t useless;
+  uint8_t i = NUMBER_OF_TRIES;
+  while (i > 0) {
+    util_sys_inb(OUTPUT_B, &useless);
+    i--;
+    if (useless & BIT(7)) 
+      return useless;
+  }
+
   return 0;
 }
 
@@ -43,6 +56,67 @@ void (kbc_ih)()
     }
   }
   return;
+}
+enum KBC_KEY (check_key)(uint8_t scancode, bool is_two_bytes) {
+
+  if (is_two_bytes) {
+
+    switch(scancode) {
+      default:
+      return NO_KEY;
+      break;
+    }
+  } else {
+
+    switch (scancode) {
+      case ESC_BREAKCODE:
+        return ESC_BC;
+        break;
+      case W_MAKECODE:
+        return W_MC;
+        break;
+      case S_MAKECODE:
+        return S_MC;
+        break;
+      case A_MAKECODE:
+        return A_MC;
+        break;
+      case D_MAKECODE:
+        return D_MC;
+        break;
+      case W_BREAKCODE:
+        return W_BC;
+        break;
+      case S_BREAKCODE:
+        return S_BC;
+        break;
+      case A_BREAKCODE:
+        return A_BC;
+        break;
+      case D_BREAKCODE:
+        return D_BC;
+        break;
+      case SPACE_BREAKCODE:
+        return SPACE_BC;
+        break;
+      case ENTER_BREAKCODE:
+        return ENTER_BC;
+        break;
+      default:
+        return NO_KEY;
+        break;
+    }
+  } 
+}
+enum KBC_KEY (get_key_pressed)(void){
+  uint8_t stat;
+  if(read_from_output_buffer(&stat) != 0){
+    return NO_KEY;
+  }
+  uint8_t discarded = discard_mc();
+  if (discarded != 0) 
+    scancode = discarded;
+
 }
 
 int (write_command)(uint8_t command){
