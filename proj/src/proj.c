@@ -119,7 +119,8 @@ int(proj_main_loop)(int argc, char *argv[]) {
             struct packet pacote_dados;
             createMousePacket(mouse_dados,&pacote_dados);
             mouse_bytes=0;
-            update_mouse_coord(pacote_dados);
+            mouse_update_position(pacote_dados);
+            
             if(pacote_dados.bytes[0] & MOUSE_LB)
               treat_mouse_click();
           }
@@ -135,14 +136,14 @@ int(proj_main_loop)(int argc, char *argv[]) {
       }
     }
   }
-
-  //Exiting graphic mode
-  if(game_exit_graphic_mode()!=0)
-    return -1;
   
   //Unsubscribing periphericals
   if(unsubscribe_periphericals()!=0)
     return -1;
+
+  //Exiting graphic mode
+  if(game_exit_graphic_mode()!=0)
+    return -1; 
 
   //Eliminating game and whatnot - avoiding memory leaks by freeing allocated mem
   eliminate_game();

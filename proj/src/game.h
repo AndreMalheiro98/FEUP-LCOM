@@ -24,10 +24,11 @@ int subscribe_periphericals(uint32_t * mouse_mask,uint32_t * timer_mask);
 int unsubscribe_periphericals();
 int game_exit_graphic_mode();
 Game * create_new_game();
-int play_game();
+int game_begin();
 void eliminate_game();
 void update_mouse_coord(struct packet data);
 int draw_screen(xpm_map_t xpm_image);
 void treat_mouse_click();
 int game_update();
+void draw_mouse();
 #endif

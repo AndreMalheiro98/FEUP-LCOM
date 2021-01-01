@@ -141,7 +141,7 @@ int (vg_draw_pixmap)(xpm_map_t xpm,int x,int y){
     printf("Error:Pixmap out of bounds %d %d %d %d\n",img.width+x,hres,img.height+y,vres);
     return -1;
   }
-
+  free(sprite);
   vg_display_pixmap(img,x,y,buffer);  
   return 0;
 }

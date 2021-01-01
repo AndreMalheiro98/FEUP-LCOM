@@ -70,11 +70,10 @@ int get_game_state(){
   return game->state;
 }
 
-int play_game(){
-  if(vg_draw_pixmap(game_background_xpm,0,0)!=0)
+int game_begin(){
+  if(draw_screen(game_background_xpm)==-1)
     return -1;
-  update_mouse(game->game_mouse->img,game->game_mouse->x,game->game_mouse->y);
-  refresh_screen();
+  
   return 0;
 }
 
@@ -86,15 +85,12 @@ void eliminate_game(){
 
 void update_mouse_coord(struct packet data){
   mouse_update_position(data);
-  update_mouse(game->game_mouse->img,game->game_mouse->x,game->game_mouse->y);
-  refresh_screen();
 }
 
 int draw_screen(xpm_map_t xpm_image){
   if(vg_draw_pixmap(xpm_image,0,0)!=0)
     return -1;
-  update_mouse(game->game_mouse->img,game->game_mouse->x,game->game_mouse->y);
-  refresh_screen();
+  draw_mouse();
   return 0;
 }
 
@@ -105,10 +101,16 @@ int game_update(){
     if(!draw_screen(main_menu_xpm))
       game->state=STATE_IN_MAIN_MENU;
     break;
-  case STATE_BEGIN_GAME:
-    if(!draw_screen(game_background_xpm))
-    game->state= STATE_DURING_GAME;
+  case STATE_IN_MAIN_MENU:
+    draw_mouse();
     break;
+  case STATE_BEGIN_GAME:
+    if(!game_begin())
+      game->state= STATE_DURING_GAME;
+    break;
+  case STATE_DURING_GAME:
+      draw_mouse();
+      break;
   case STATE_END_GAME:
     game->state=STATE_EXIT;
     break;
@@ -125,11 +127,17 @@ void treat_mouse_click(){
     if(game->game_mouse->x>=295 && game->game_mouse->x<=857){ 
       if(game->game_mouse->y>=622 && game->game_mouse->y<=717)  //CHECK IF USER CLICKED ON EXIT
         game->state=STATE_END_GAME;
-      /*else if(game->game_mouse->y>=342 && game->game_mouse->y<=437) //CHECK IF USER CLICKED ON PLAY 
-      else if(game->game_mouse->y>=482 && game->game_mouse->y<=577) //CHECK IF USER CLICKED ON HIGHSCORE*/
+      else if(game->game_mouse->y>=342 && game->game_mouse->y<=437) //CHECK IF USER CLICKED ON PLAY 
+        game->state=STATE_BEGIN_GAME;
+      /*else if(game->game_mouse->y>=482 && game->game_mouse->y<=577) //CHECK IF USER CLICKED ON HIGHSCORE*/
     }
     break;
   default:
     break;
   }
+}
+
+void draw_mouse(){
+  update_mouse(game->game_mouse->img,game->game_mouse->x,game->game_mouse->y);
+  refresh_screen();
 }
