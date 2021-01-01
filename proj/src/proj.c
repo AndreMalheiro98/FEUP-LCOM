@@ -52,7 +52,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
   //
   /*bool const minix3_logo = true;
   bool const grayscale = false;*/
-  uint16_t const delay = 600;
+ // uint16_t const delay = 600;
   //uint16_t mode;
 
   if (argc !=0)
@@ -87,13 +87,12 @@ int(proj_main_loop)(int argc, char *argv[]) {
   }
   
 
-  draw_menu();
   //main cycle for interrupts
   uint8_t mouse_dados[3],mouse_bytes;
   message msg;
   int r,ipc_status;
   mouse_bytes=0;
-  while(timer_tick_counter<delay){
+  while(get_game_state()!=STATE_EXIT){
     if((r=driver_receive(ANY,&msg,&ipc_status)) !=0){
       printf("Driver receive failed with %d",r);
       continue;
@@ -121,10 +120,13 @@ int(proj_main_loop)(int argc, char *argv[]) {
             createMousePacket(mouse_dados,&pacote_dados);
             mouse_bytes=0;
             update_mouse_coord(pacote_dados);
+            if(pacote_dados.bytes[0] & MOUSE_LB)
+              treat_mouse_click();
           }
         }
         else if(msg.m_notify.interrupts & timer_mask){//timer interrupts
           timer_int_handler();
+          game_update();
         }
         break;
       

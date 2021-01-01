@@ -222,3 +222,8 @@ void update_mouse(xpm_image_t mouse_img,int x,int y){
   memcpy(mouse_buffer,buffer,video_mem_size);
   vg_display_pixmap(mouse_img,x,y,mouse_buffer);
 }
+
+void free_buffers(){
+  free(buffer);
+  free(mouse_buffer);
+}

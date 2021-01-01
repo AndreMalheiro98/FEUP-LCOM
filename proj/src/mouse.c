@@ -1,7 +1,6 @@
 #include <lcom/lcf.h>
 #include "mouse.h"
 #include "kbc.h"
-#include "i8042.h"
 #include "vbe.h"
 #include "../Images/aim.xpm"
 static Mouse *mouse=NULL;

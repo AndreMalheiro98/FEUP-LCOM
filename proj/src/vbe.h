@@ -27,4 +27,5 @@ int get_hres();
 void refresh_screen();
 void update_mouse(xpm_image_t mouse_img,int x,int y);
 uint8_t *load_pixmap(xpm_map_t xpm,xpm_image_t *img);
+void free_buffers();
 #endif
