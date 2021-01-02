@@ -30,42 +30,16 @@ int (mouse_enable_data_report)(void){
             printf("Error reading answer from mouse\n");
             continue;
         }
-        break;
+        return 0;
     }
-    if(i==3)
-        return -1;
-    return 0;
-
+    return -1;
 }
 
 void (mouse_ih)(void){
-    uint8_t byte;
     mouse_flag=0;
-    if(util_sys_inb(KBD_STAT_REG,&byte)!=0)
-    {
-        printf("error reading status register\n");
-        return ;
-    }
-    
-    if(byte&KBD_OBF && byte&KBD_AUX)
-    {
-        
-        if(util_sys_inb(KBD_OUT_BUF,&mouse_data)!=0)
-        {
-            printf("Error reading mouse mouse_data\n");
-            return ;
-        }
-        
-        if(byte&KBD_TO_ERR || byte&KBD_PAR_ERR)
-        {
-            printf("mouse_data has error., discarding\n");
-            return ;
-        }
+
+    if(read_mouse_data(&mouse_data)==0)
         mouse_flag=1;
-    }
-    else if(!(byte&KBD_OBF))   printf("No mouse_data on output buffer\n");
-    
-        
     return ;
 }
 
@@ -105,19 +79,7 @@ int (mouse_unsubscribe_interrupts)(){
 
 int (read_return_from_mouse)(){
     uint8_t mouse_return_value;
-    int i=0;
-    for(i=0;i<10;i++)
-    {
-        tickdelay(micros_to_ticks(DELAY_US));
-        if(util_sys_inb(KBD_OUT_BUF,&mouse_return_value)!=0)
-        {
-            printf("Error reading from Output Buffer\n");
-            continue;
-        }
-        else
-            break;
-    } 
-    if(i==10)
+    if(read_mouse_data(&mouse_return_value)!=0)
         return -1;
     switch(mouse_return_value)
     {
@@ -136,36 +98,6 @@ int (read_return_from_mouse)(){
     return 0;
 }
 
-int (read_data_from_mouse)(){
-    if(write_command(KBC_WRITE_TO_MOUSE)!=0)
-    {
-        printf("Can't write command to KBC after max number of tries (10)\n");
-        return -1;
-    }
-    else 
-    {
-        int n=0;
-        while(n<10)
-        {
-            if(write_command_byte(MOUSE_READ_DATA)==0)
-                break;
-        }
-        if(n==10)
-        {
-            printf("Can't command to KBC after max number of tries (10)\n");
-            return -1;
-        }
-        tickdelay(micros_to_ticks(DELAY_US));
-        
-    }
-
-    if(read_return_from_mouse()!=0)
-    {
-      printf("Error reading answer from mouse\n");
-      return -1;
-    }
-    return 0;
-}
 
 int (set_default_minix)(){
     if(write_command(COMMAND_WRITE_BYTE_COMMAND)!=0)
@@ -196,12 +128,11 @@ int (start_mouse)(uint32_t * mouse_mask){
         printf("Error subscribing mouse interrupts\n");
         return -1;
     }
+    printf("Mouse enabled\n");
     return 0;
 }
 
 int (disable_mouse)(){
-    
-
     //Unsubscribing mouse interrupts
     if(mouse_unsubscribe_interrupts()==-1)
     {
@@ -216,7 +147,7 @@ int (disable_mouse)(){
         printf("Error writing command 0xD4 to KBC\n");
         return -1;
     }
-    printf("going to disable - byte\n");
+
     if(write_command_byte(MOUSE_DISABLE_DATA_REPORT)!=0)
     {
         printf("Error writing command 0xF5 to mouse\n");

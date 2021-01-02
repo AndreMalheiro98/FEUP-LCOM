@@ -15,7 +15,6 @@ void createMousePacket(uint8_t array[3],struct packet *pp);
 int (mouse_subscribe_interrupts)(uint32_t *bit_no);
 int (mouse_unsubscribe_interrupts)();
 int (read_return_from_mouse)();
-int (read_data_from_mouse)();
 int(set_default_minix)();
 int (start_mouse)(uint32_t * mouse_mask);
 int (disable_mouse)();

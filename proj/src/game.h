@@ -2,9 +2,8 @@
 #define _GAME_H
 #include "vbe.h"
 #include "mouse.h"
-#include "kbc.h"
 #include "timer.h"  
-
+#include "keyboard.h"
 typedef struct{
     Mouse *game_mouse;
     int state;

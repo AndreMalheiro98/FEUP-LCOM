@@ -35,6 +35,7 @@ int subscribe_periphericals(uint32_t * mouse_mask,uint32_t * timer_mask){
   }
   *timer_mask=BIT(aux);
 
+  
   return 0;
 }
 
