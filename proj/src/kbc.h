@@ -14,7 +14,7 @@ enum KBC_KEY {
   TWO_BYTE = 0,     /* enum Two bytes */
   ESC_BC = 1,    /* enum Esc breakcode */
   NO_KEY = 2,       /* enum No key pressed or invalid key*/
-  R_MC = 3,       /* enum A makecode*/
+  R_MC = 3,       /* enum R makecode*/
   R_BC = 4,       /* enum R breakcode*/
   SPACE_BC = 5, /* enum Space breakcode*/
   ENTER_BC = 6  /* enum Enter breakcode*/
