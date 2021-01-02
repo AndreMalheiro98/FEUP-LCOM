@@ -1,6 +1,8 @@
 #ifndef __TIMER_H
 #define __TIMER_H
 
+#include <stdbool.h>
+#include <stdint.h>
 
 /** @defgroup timer timer
  * @{
@@ -57,7 +59,7 @@ int(timer_set_frequency)(uint8_t timer, uint32_t freq);
  *         bit number to be set in the mask returned upon an interrupt
  * @return Return 0 upon success and non-zero otherwise
  */
-int (timer_subscribe_int)(uint8_t *bit_no);
+int(timer_subscribe_int)(uint8_t *bit_no);
 
 /**
  * @brief Unsubscribes Timer 0 interrupts

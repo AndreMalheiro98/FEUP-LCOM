@@ -1,5 +1,6 @@
 #include <lcom/lcf.h>
 #include "kbc.h"
+#include "i8042.h"
 extern uint32_t number_sysinb_calls;
 
 int hook;
@@ -114,7 +115,7 @@ int (write_command)(uint8_t command){
       printf("Error reading register status\n");
       continue;
     }
-    if(register_status & KBD_IN_BUF)
+    if(register_status & KBD_IBF)
     {
       printf("Status register Input Buffer is full. Can't write at the moment\n");
       continue;
@@ -133,9 +134,25 @@ int (write_command)(uint8_t command){
   return -1;
 }
 
+void (empty_input_buffer)(){
+  uint8_t byte;
+  uint8_t register_status;
+  do{
+    if(util_sys_inb(KBD_STAT_REG,&register_status)!=0)
+      return ;
+    if(register_status & KBD_IBF)
+    {
+      if(util_sys_inb(KBD_IN_BUF,&byte)!=0)
+        return ;  
+    }
+  }while(register_status & KBD_IBF);
+}
+
 int (write_command_byte)(uint8_t command_byte)
 {
-  
+  int i;
+  for(i=0;i<10;i++)
+  {
   tickdelay(micros_to_ticks(DELAY_US));
   uint8_t register_status;
   if(util_sys_inb(KBD_STAT_REG,&register_status)!=OK)
@@ -146,20 +163,23 @@ int (write_command_byte)(uint8_t command_byte)
   {
     uint8_t aux;
     if(read_from_output_buffer(&aux)!=0)
+    {
       printf("Error - 0x%.2x\n",register_status);
+    }
+    continue;
   }
   else{
     uint32_t convers=command_byte;
     if(sys_outb(KBD_ARGUMENT,convers)!=OK)
     {
       printf("Error writing argument to port 0x60\n");
-      return -1;
+      continue;
     }
-    printf("New command byte - 0x%.2x\n",command_byte);
-  }
     
-  
-  return 0;
+    return 0;
+    }
+  }
+  return -1;
 }
 
 int (read_from_output_buffer)(uint8_t *read_value)
@@ -175,7 +195,7 @@ int (read_from_output_buffer)(uint8_t *read_value)
       printf("Error reading register status\n");
       continue;
     }
-    if(register_status & BIT(0) && !(register_status & BIT(5)))
+    if(register_status & BIT(0) )
     {
       if(util_sys_inb(KBD_OUT_BUF,read_value)!=0)
       {

@@ -1,10 +1,14 @@
 #include <lcom/lcf.h>
 #include "mouse.h"
+#include "kbc.h"
+#include "vbe.h"
+#include "../Images/aim.xpm"
+static Mouse *mouse=NULL;
 int hook;
-uint8_t data;
-bool flag=0;
+uint8_t mouse_data;
+bool mouse_flag=0;
 int (mouse_enable_data_report)(void){
-    //Disable data reporting
+    //Disable mouse_data reporting
     int i=0;
     for(i=0;i<3;i++){
         tickdelay(micros_to_ticks(DELAY_US));
@@ -36,7 +40,7 @@ int (mouse_enable_data_report)(void){
 
 void (mouse_ih)(void){
     uint8_t byte;
-    flag=0;
+    mouse_flag=0;
     if(util_sys_inb(KBD_STAT_REG,&byte)!=0)
     {
         printf("error reading status register\n");
@@ -46,20 +50,20 @@ void (mouse_ih)(void){
     if(byte&KBD_OBF && byte&KBD_AUX)
     {
         
-        if(util_sys_inb(KBD_OUT_BUF,&data)!=0)
+        if(util_sys_inb(KBD_OUT_BUF,&mouse_data)!=0)
         {
-            printf("Error reading mouse data\n");
+            printf("Error reading mouse mouse_data\n");
             return ;
         }
         
         if(byte&KBD_TO_ERR || byte&KBD_PAR_ERR)
         {
-            printf("Data has error., discarding\n");
+            printf("mouse_data has error., discarding\n");
             return ;
         }
-        flag=1;
+        mouse_flag=1;
     }
-    else if(!(byte&KBD_OBF))   printf("No data on output buffer\n");
+    else if(!(byte&KBD_OBF))   printf("No mouse_data on output buffer\n");
     
         
     return ;
@@ -85,8 +89,9 @@ void createMousePacket(uint8_t array[3],struct packet *pp)
         pp->delta_y=array[2]; 
 }
 
-int (mouse_subscribe_interrupts)(){
+int (mouse_subscribe_interrupts)(uint32_t *bit_no){
     hook=MOUSE_IRQ;
+    *bit_no=BIT(hook);
     if(sys_irqsetpolicy(MOUSE_IRQ,IRQ_REENABLE | IRQ_EXCLUSIVE,&hook)!=OK)
         return -1;
     return 0;
@@ -125,7 +130,7 @@ int (read_return_from_mouse)(){
             printf("ERROR \t");
             return -1;
         default:
-            printf("Byte read is not a mouse error\t");
+            printf("Byte read is not a mouse error %.2x\t",mouse_return_value);
             return -1;
     }
     return 0;
@@ -178,15 +183,15 @@ int (set_default_minix)(){
     return 0;
 }
 
-int (start_mouse)(){
+int (start_mouse)(uint32_t * mouse_mask){
     // Enabling stream mode
     if(mouse_enable_data_report()!=0)
     {
-        printf("Error enabling data report\n");
+        printf("Error enabling mouse_data report\n");
         return -1;
     }
     //Subscribing mouse interrupts
-    if(mouse_subscribe_interrupts()==-1)
+    if(mouse_subscribe_interrupts(mouse_mask)==-1)
     {
         printf("Error subscribing mouse interrupts\n");
         return -1;
@@ -195,31 +200,68 @@ int (start_mouse)(){
 }
 
 int (disable_mouse)(){
+    
+
     //Unsubscribing mouse interrupts
     if(mouse_unsubscribe_interrupts()==-1)
     {
         printf("Error unsubscribing mouse interrupts\n");
         return -1;
     }
-    //Disable data reporting
+    empty_input_buffer();
+    
+    //Disable mouse_data reporting
     if(write_command(KBC_WRITE_TO_MOUSE)!=0)
     {
         printf("Error writing command 0xD4 to KBC\n");
         return -1;
     }
-
+    printf("going to disable - byte\n");
     if(write_command_byte(MOUSE_DISABLE_DATA_REPORT)!=0)
     {
         printf("Error writing command 0xF5 to mouse\n");
         return -1;
     }
-
     //Reading return byte from mouse due to writing byte to mouse
     if(read_return_from_mouse()!=0)
     {
         printf("Error reading answer from mouse\n");
         return -1;
-  }
-  else
-    printf("Data report successfully disabled\n");
+    }
+    printf("Sucessfully disabled mouse\n");
+    return 0;
+}
+
+Mouse * get_mouse(){
+    if(mouse==NULL)
+    {
+        mouse=(Mouse *)malloc(sizeof(Mouse));
+        if(load_pixmap(aim_xpm,&mouse->img)==NULL)
+            return NULL;
+    }
+    return mouse;
+}
+
+void eliminate_Mouse(){
+    free(mouse);
+}
+
+void mouse_update_position(struct packet data){
+    mouse->x+=data.delta_x;
+    mouse->y-=data.delta_y;
+    if((mouse->x+mouse->img.width)>get_hres())
+    {
+        printf("x-%d\t",mouse->x);
+        mouse->x=get_hres()-mouse->img.width;
+    }
+    else if(mouse->x<0)
+        mouse->x=mouse->img.width/2;
+
+    if((mouse->y+mouse->img.height)>get_vres())
+    {
+        printf("y-%d\t",mouse->y);
+        mouse->y=get_vres()-mouse->img.height;
+    }
+    else if(mouse->y<0)
+        mouse->y=mouse->img.height/2;
 }

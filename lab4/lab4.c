@@ -149,14 +149,15 @@ int (mouse_test_async)(uint8_t idle_time) {
     printf("Error subscribing mouse interrupts\n");
     return -1;
   }
-  uint8_t irq_set_timer
+  uint8_t irq_set_timer;
   if (timer_subscribe_int(&irq_set_timer)==1)
   {
     printf("Error subscribing timer 0 interrupts\n");
     return -1;
   }
-
+  uint8_t dados[3];
   int ipc_status,r;
+  int bytes=0;
   message msg;
   uint32_t mask=BIT(MOUSE_IRQ), mask2 = BIT(irq_set_timer);
 
@@ -189,7 +190,7 @@ int (mouse_test_async)(uint8_t idle_time) {
               struct packet pacote_dados;
               createMousePacket(dados,&pacote_dados);
               mouse_print_packet(&pacote_dados);
-              cnt--;
+              
               bytes=0;
             }
             global_int_counter = 0;
