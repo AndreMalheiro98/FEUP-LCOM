@@ -45,7 +45,7 @@ void (kbc_ih)()
   }
   return;
 }
-enum KBC_KEY (check_key)(uint8_t scancode, bool is_two_bytes) {
+enum KBC_KEY (Verify_Key)(uint8_t scancode, bool is_two_bytes) {
 
   if (is_two_bytes) {
 
@@ -57,19 +57,19 @@ enum KBC_KEY (check_key)(uint8_t scancode, bool is_two_bytes) {
   } else {
 
     switch (scancode) {
-      case ESC_BREAKCODE:
+      case ESC_KEY_BREAKCODE:
         return ESC_BC;
         break;
-      case R_MAKECODE:
+      case R_KEY_MAKECODE:
         return R_MC;
         break;
-      case R_BREAKCODE:
+      case R_KEY_BREAKCODE:
         return R_BC;
         break;
-      case SPACE_BREAKCODE:
+      case SPACE_KEY_BREAKCODE:
         return SPACE_BC;
         break;
-      case ENTER_BREAKCODE:
+      case ENTER_KEY_BREAKCODE:
         return ENTER_BC;
         break;
       default:
@@ -78,7 +78,7 @@ enum KBC_KEY (check_key)(uint8_t scancode, bool is_two_bytes) {
     }
   } 
 }
-enum KBC_KEY (get_key_pressed)(void){
+/*enum KBC_KEY (get_key_pressed)(void){
   uint8_t stat;
   if(read_from_output_buffer(&stat) != 0){
     return NO_KEY;
@@ -87,8 +87,7 @@ enum KBC_KEY (get_key_pressed)(void){
   if (discarded != 0) 
     scancode = discarded;
   
-
-}
+}*/
 
 int (write_command)(uint8_t command){
   uint8_t register_status;

@@ -1,12 +1,6 @@
 #ifndef __KBC_H
 #define __KBC_H
-#include <lcom/lcf.h>
-#include <lcom/timer.h>
 
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include "i8042.h"
 #define NUMBER_OF_TRIES 2 /* number of tries possible*/
 
@@ -19,20 +13,14 @@ enum KBC_KEY {
   SPACE_BC = 5, /* enum Space breakcode*/
   ENTER_BC = 6  /* enum Enter breakcode*/
 };
-
-
-int (kbc_subscribe_interrupts)();
-int (kbc_unsubsribe_interrupts)();
-void (kbc_ih)();
-int (write_command)(uint8_t command);
-int (write_command_byte)(uint8_t command_byte);
-int (read_from_output_buffer)(uint8_t *read_value);
-
-int (kbc_subscribe_interrupts)();
-int (kbc_unsubsribe_interrupts)();
-void (kbc_ih)();
-int (write_command)(uint8_t command);
-int (write_command_byte)(uint8_t command_byte);
-int (read_from_output_buffer)(uint8_t *read_value);
-void (empty_input_buffer)();
+  //enum KBC_KEY (get_key_pressed)(void);
+  enum KBC_KEY (Verify_Key)(uint8_t scancode, bool is_two_bytes) ;
+  uint8_t discard_mc(void) ;
+  int (kbc_subscribe_interrupts)();
+  int (kbc_unsubsribe_interrupts)();
+  void (kbc_ih)();
+  int (write_command)(uint8_t command);
+  int (write_command_byte)(uint8_t command_byte);
+  int (read_from_output_buffer)(uint8_t *read_value);
+  void (empty_input_buffer)();
 #endif
