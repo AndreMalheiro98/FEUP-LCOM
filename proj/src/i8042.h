@@ -6,7 +6,12 @@
 #define KBD_IRQ	1  /**< @brief Keyboard IRQ line */
 #define KBD_BIT 4 /* BIT SELECTOR FOR OUR INTERRUPTS */
 
-#define ESC_KEY 0x81
+#define ESC_KEY_BREAKCODE 0x81
+#define R_KEY_MAKECODE 0x13
+#define R_KEY_BREAKCODE 0x93
+#define SPACE_KEY_BREAKCODE 0xB9
+#define ENTER_KEY_BREAKCODE 0x9C
+
 
 #define DELAY_US	20000
 #define KBD_OUT_BUF		0x60
