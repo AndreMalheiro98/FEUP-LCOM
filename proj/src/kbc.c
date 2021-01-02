@@ -72,29 +72,11 @@ enum KBC_KEY (check_key)(uint8_t scancode, bool is_two_bytes) {
       case ESC_BREAKCODE:
         return ESC_BC;
         break;
-      case W_MAKECODE:
-        return W_MC;
+      case R_MAKECODE:
+        return R_MC;
         break;
-      case S_MAKECODE:
-        return S_MC;
-        break;
-      case A_MAKECODE:
-        return A_MC;
-        break;
-      case D_MAKECODE:
-        return D_MC;
-        break;
-      case W_BREAKCODE:
-        return W_BC;
-        break;
-      case S_BREAKCODE:
-        return S_BC;
-        break;
-      case A_BREAKCODE:
-        return A_BC;
-        break;
-      case D_BREAKCODE:
-        return D_BC;
+      case R_BREAKCODE:
+        return R_BC;
         break;
       case SPACE_BREAKCODE:
         return SPACE_BC;

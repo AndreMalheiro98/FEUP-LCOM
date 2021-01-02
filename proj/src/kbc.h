@@ -11,18 +11,12 @@
 #define NUMBER_OF_TRIES 2 /* number of tries possible*/
 enum KBC_KEY {
   TWO_BYTE = 0,     /* enum Two bytes */
-  ESC_BC = 2,    /* enum Esc breakcode */
-  NO_KEY = 1,       /* enum No key pressed or invalid key*/
-  A_MC = 3,       /* enum A makecode*/
-  D_MC = 4,       /* enum D makecode*/
-  W_MC = 5,       /* enum W makecode */
-  S_MC = 6,       /* enum S makecode*/
-  A_BC = 7,      /* enum A breakcode*/
-  D_BC = 8,     /* enum D breakcode*/
-  W_BC = 9,      /* enum W breakcode*/
-  S_BC = 10,      /* enum S breakcode*/
-  SPACE_BC = 11, /* enum Space breakcode*/
-  ENTER_BC = 12  /* enum Enter breakcode*/
+  ESC_BC = 1,    /* enum Esc breakcode */
+  NO_KEY = 2,       /* enum No key pressed or invalid key*/
+  R_MC = 3,       /* enum A makecode*/
+  R_BC = 4,       /* enum R breakcode*/
+  SPACE_BC = 5, /* enum Space breakcode*/
+  ENTER_BC = 6  /* enum Enter breakcode*/
 };
 
 
