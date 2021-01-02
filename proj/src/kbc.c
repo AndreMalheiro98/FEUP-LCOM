@@ -58,7 +58,7 @@ void (kbc_ih)()
   }
   return;
 }
-enum KBC_KEY (check_key)(uint8_t scancode, bool is_two_bytes) {
+enum KBC_KEY (Verify_Key)(uint8_t scancode, bool is_two_bytes) {
 
   if (is_two_bytes) {
 
