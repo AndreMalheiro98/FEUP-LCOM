@@ -3,6 +3,8 @@
 #include "../Images/game_background.xpm"
 #include "../Images/main_menu.xpm"
 static Game *game;
+extern uint8_t bytes[2];
+extern bool kbc_flag;
 int game_init_graphics_mode(){
   vbe_mode_info_t mode_info;
   void *video_mem=init_graphics_mode(VBE_MODE_4,&mode_info);
@@ -143,8 +145,10 @@ void draw_mouse(){
 }
 
 int treat_key_board_keys(){
+  static bool make = 0;
+  static int i = 0;
   kbc_ih();
-  if(flag==1)
+  if(kbc_flag==1)
   {
     if(bytes[0]&BREAKCODE)
       make=0;
@@ -152,11 +156,11 @@ int treat_key_board_keys(){
       make=1;
     if(i==2)
     {
-      get_key_pre;
-      flag=0;
+      get_key_pressed(make,2,bytes);
+      kbc_flag=0;
       i=0;
     }
-    if(bytes[1]==ESC_KEY)
+    if(bytes[1]==ESC_KEY_BREAKCODE)
       x=0;
   }
   else
@@ -166,9 +170,9 @@ int treat_key_board_keys(){
       make=0;
     else
       make=1;
-    kbd_print_scancode(make,1,bytes);
-    flag=0;
-    if(bytes[0]==ESC_KEY)
+    get_key_pressed(make,1,bytes);
+    kbc_flag=0;
+    if(bytes[0]==ESC_KEY_BREAKCODE)
       x=0;
   }
 }
