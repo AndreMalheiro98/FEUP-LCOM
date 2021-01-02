@@ -19,19 +19,6 @@ int (kbc_unsubsribe_interrupts)(){
     return -1;
   return 0;
 }
-uint8_t discard_mc(void) {
-
-  uint8_t useless;
-  uint8_t i = NUMBER_OF_TRIES;
-  while (i > 0) {
-    util_sys_inb(OUTPUT_B, &useless);
-    i--;
-    if (useless & BIT(7)) 
-      return useless;
-  }
-
-  return 0;
-}
 
 void (kbc_ih)()
 {
@@ -99,6 +86,7 @@ enum KBC_KEY (get_key_pressed)(void){
   uint8_t discarded = discard_mc();
   if (discarded != 0) 
     scancode = discarded;
+  
 
 }
 
@@ -220,4 +208,26 @@ int (read_from_output_buffer)(uint8_t *read_value)
     return 0;
   }
   return -1;
+}
+void (kbc_ih)(void) {
+  uint8_t status;
+
+  if (read_from_output_buffer(&status) != 0) {
+    return ;
+  }
+
+  if (scancode == 0xE0) {
+    is_two_bytes = true;
+    scancodes[0] = scancode;
+  }
+
+  else if (is_two_bytes) {
+    is_two_bytes = false;
+    scancodes[1] = scancode;
+  }
+  
+  else {
+    scancodes[0] = scancode; 
+  }
+
 }

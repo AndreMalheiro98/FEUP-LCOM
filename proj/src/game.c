@@ -141,3 +141,34 @@ void draw_mouse(){
   update_mouse(game->game_mouse->img,game->game_mouse->x,game->game_mouse->y);
   refresh_screen();
 }
+
+int treat_key_board_keys(){
+  kbc_ih();
+  if(flag==1)
+  {
+    if(bytes[0]&BREAKCODE)
+      make=0;
+    else
+      make=1;
+    if(i==2)
+    {
+      get_key_pre;
+      flag=0;
+      i=0;
+    }
+    if(bytes[1]==ESC_KEY)
+      x=0;
+  }
+  else
+  {
+    i=0;
+    if(bytes[0]&BREAKCODE)
+      make=0;
+    else
+      make=1;
+    kbd_print_scancode(make,1,bytes);
+    flag=0;
+    if(bytes[0]==ESC_KEY)
+      x=0;
+  }
+}
