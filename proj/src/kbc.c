@@ -67,10 +67,11 @@ enum KBC_KEY (Verify_Key)(uint8_t scancode) {
       break;
   }
 } 
-enum KBC_KEY (get_key_pressed)(bool make, int number_of_bytes, *uint8_t key_codes){
+enum KBC_KEY (get_key_pressed)(bool make, int number_of_bytes, uint8_t * key_codes){
   if(make) return NO_KEY;
   else if(number_of_bytes == 2) return Verify_Key(key_codes[1]);
   else if(number_of_bytes == 1) return Verify_Key(key_codes[0]);
+  else  return NO_KEY;
 }
 
 int (write_command)(uint8_t command){
@@ -191,26 +192,4 @@ int (read_from_output_buffer)(uint8_t *read_value)
     return 0;
   }
   return -1;
-}
-void (kbc_ih)(void) {
-  uint8_t status;
-
-  if (read_from_output_buffer(&status) != 0) {
-    return ;
-  }
-
-  if (scancode == 0xE0) {
-    is_two_bytes = true;
-    scancodes[0] = scancode;
-  }
-
-  else if (is_two_bytes) {
-    is_two_bytes = false;
-    scancodes[1] = scancode;
-  }
-  
-  else {
-    scancodes[0] = scancode; 
-  }
-
 }

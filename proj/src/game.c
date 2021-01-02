@@ -144,7 +144,7 @@ void draw_mouse(){
   refresh_screen();
 }
 
-int treat_key_board_keys(){
+void treat_key_board_keys(){
   static bool make = 0;
   static int i = 0;
   kbc_ih();
@@ -160,8 +160,6 @@ int treat_key_board_keys(){
       kbc_flag=0;
       i=0;
     }
-    if(bytes[1]==ESC_KEY_BREAKCODE)
-      x=0;
   }
   else
   {
@@ -172,7 +170,5 @@ int treat_key_board_keys(){
       make=1;
     get_key_pressed(make,1,bytes);
     kbc_flag=0;
-    if(bytes[0]==ESC_KEY_BREAKCODE)
-      x=0;
   }
 }

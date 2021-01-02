@@ -31,4 +31,5 @@ int draw_screen(xpm_map_t xpm_image);
 void treat_mouse_click();
 int game_update();
 void draw_mouse();
+void treat_key_board_keys();
 #endif
