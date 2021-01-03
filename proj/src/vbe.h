@@ -15,6 +15,7 @@ typedef struct{
   uint32_t Capabilities;
   
 }VbeInfoBlock;
+
 //FUNCTIONS
 /**
  * @brief  
