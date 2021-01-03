@@ -2,20 +2,20 @@
 #include "keyboard.h"
 #include "i8042.h"
 #include "kbc.h"
-int hook;
+int kbc_hook;
 uint8_t bytes[2];
 bool kbc_flag , is_two_bytes = 0;
-int poll_helper;
 
-int (kbc_subscribe_interrupts)(){ 
-  hook=KBD_IRQ;
-  if(sys_irqsetpolicy(KBD_IRQ,IRQ_REENABLE|IRQ_EXCLUSIVE,&hook)!=OK)
+int (kbc_subscribe_interrupts)(uint32_t * mask){ 
+  kbc_hook=KBD_IRQ;
+  *mask=BIT(kbc_hook);
+  if(sys_irqsetpolicy(KBD_IRQ,IRQ_REENABLE|IRQ_EXCLUSIVE,&kbc_hook)!=OK)
     return -1;
   return 0;
 }
 
-int (kbc_unsubsribe_interrupts)(){
-  if(sys_irqrmpolicy(&hook)!=OK)
+int (kbc_unsubscribe_interrupts)(){
+  if(sys_irqrmpolicy(&kbc_hook)!=OK)
     return -1;
   return 0;
 }
@@ -25,8 +25,6 @@ void (kbc_ih)()
   uint8_t scancode;
   if(read_keyboard_data(&scancode)!=0)
     return;
-  else
-    poll_helper=1;
   if(scancode==KB_TWO_BYTES_SCANCODE_FIRST_BYTE)
   {
     kbc_flag=1;

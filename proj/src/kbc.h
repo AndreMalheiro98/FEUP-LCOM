@@ -1,7 +1,6 @@
 #ifndef __KBC_H
 #define __KBC_H
 
-  #include "i8042.h"
   int (write_command)(uint8_t command);
   int (write_command_byte)(uint8_t command_byte);
   void (empty_input_buffer)();

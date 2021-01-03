@@ -1,2 +1,3 @@
 aim.xpm - art from - https://opengameart.org/content/aim
 game_background.xpm - art from - https://craftpix.net/
+pause_menu.xpm - art made by us - https://viliusle.github.io/miniPaint/

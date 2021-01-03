@@ -7,8 +7,9 @@ static Mouse *mouse=NULL;
 int hook;
 uint8_t mouse_data;
 bool mouse_flag=0;
+
 int (mouse_enable_data_report)(void){
-    //Disable mouse_data reporting
+    //Enable mouse_data reporting
     int i=0;
     for(i=0;i<3;i++){
         tickdelay(micros_to_ticks(DELAY_US));

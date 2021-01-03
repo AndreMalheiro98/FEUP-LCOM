@@ -1,6 +1,7 @@
 #include <lcom/lcf.h>
 #include "kbc.h"
 #include <stdint.h>
+#include "i8042.h"
 extern uint32_t number_sysinb_calls;
 
 int (write_command)(uint8_t command){
@@ -96,6 +97,7 @@ int read_keyboard_data(uint8_t *kb_data){
   int number_tries=0;
   while(number_tries<10){
     number_tries++;
+    tickdelay(micros_to_ticks(DELAY_US));
     if(checkStatusRegister(&register_status)==-1) 
       continue;
     if((register_status & KBD_OBF) && !(register_status & KBD_AUX))

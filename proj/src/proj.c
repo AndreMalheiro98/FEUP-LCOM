@@ -38,8 +38,6 @@ static int print_usage() {
   return 1;
 }
 #include "game.h"
-extern uint8_t mouse_data;
-extern bool mouse_flag;
 extern int timer_tick_counter;
 int(proj_main_loop)(int argc, char *argv[]) {
   /* 
@@ -78,20 +76,17 @@ int(proj_main_loop)(int argc, char *argv[]) {
     game_exit_graphic_mode();
     return -1;
   }
-
+  
   //Subscribe to periphericals
-  uint32_t mouse_mask,timer_mask;
-  if(subscribe_periphericals(&mouse_mask,&timer_mask)!=0){
+  uint32_t mouse_mask,timer_mask,keyboard_mask;
+  if(subscribe_periphericals(&mouse_mask,&timer_mask,&keyboard_mask)!=0){
     game_exit_graphic_mode();
     return -1;
   }
-  
-
+ 
   //main cycle for interrupts
-  uint8_t mouse_dados[3],mouse_bytes;
   message msg;
   int r,ipc_status;
-  mouse_bytes=0;
   while(get_game_state()!=STATE_EXIT){
     if((r=driver_receive(ANY,&msg,&ipc_status)) !=0){
       printf("Driver receive failed with %d",r);
@@ -102,33 +97,18 @@ int(proj_main_loop)(int argc, char *argv[]) {
       {
       case HARDWARE:
         if(msg.m_notify.interrupts & mouse_mask){ //Mouse interrupts
-          mouse_ih();
-          if(mouse_flag)
-          {
-            if(mouse_data & BIT(3) && mouse_bytes==0)
-              mouse_dados[0]=mouse_data;
-            else
-              mouse_dados[mouse_bytes]=mouse_data;
-            mouse_bytes++;
-          }
-          else
-            continue;
-          
-          if(mouse_bytes==3)
-          {
-            struct packet pacote_dados;
-            createMousePacket(mouse_dados,&pacote_dados);
-            mouse_bytes=0;
-            mouse_update_position(pacote_dados);
-            
-            if(pacote_dados.bytes[0] & MOUSE_LB)
-              treat_mouse_click();
-          }
+          handle_mouse_interrupts();
         }
-        else if(msg.m_notify.interrupts & timer_mask){//timer interrupts
+        
+        if(msg.m_notify.interrupts & keyboard_mask){//keyboard interrupts)
+          handle_keyboard_interrupts();
+        }
+        
+        if(msg.m_notify.interrupts & timer_mask){//timer interrupts
           timer_int_handler();
           game_update();
         }
+        
         break;
       
       default:
