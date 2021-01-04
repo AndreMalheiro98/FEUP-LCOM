@@ -243,15 +243,18 @@ void draw_score(){
   int xDiff=50;
   int intAux=game->score;
   int final_score=0;
-  int number_of_digits=1;
+  int number_of_digits=0;
   //Inverting score
-  while(intAux!=0){
+  while(1){
+    number_of_digits++;
     final_score=final_score*10;
     final_score=final_score+intAux%10;
     intAux=intAux/10;
-    number_of_digits++;
+    if(intAux==0)
+      break;
+    
   }
-  while(number_of_digits>1){
+  while(number_of_digits>0){
     xpm_image_t number_img;
     parseScoreXpm(&number_img,final_score%10);
     final_score=final_score/10;
