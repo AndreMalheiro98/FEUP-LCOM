@@ -1,18 +1,11 @@
 #include <lcom/lcf.h>
 #include "game.h"
-#include "../images/game_background.xpm"
 #include <string.h>
-#include "../images/textCharacters/number_0.xpm"
-#include "../images/textCharacters/number_1.xpm"
-#include "../images/textCharacters/number_2.xpm"
-#include "../images/textCharacters/number_3.xpm"
-#include "../images/textCharacters/number_4.xpm"
-#include "../images/textCharacters/number_5.xpm"
-#include "../images/textCharacters/number_6.xpm"
-#include "../images/textCharacters/number_7.xpm"
-#include "../images/textCharacters/number_8.xpm"
-#include "../images/textCharacters/number_9.xpm"
+#include "../images/game_background.xpm"
 #include "../images/bullet.xpm"
+#include "../images/highscore_background.xpm"
+#include "include_aux.h"
+
 static Game *game;
 extern uint8_t bytes[2];
 extern bool kbc_flag;
@@ -21,6 +14,7 @@ extern bool mouse_flag;
 extern int timer_tick_counter;
 static int ticks_between_shot=0;
 static int ticks_during_reload=0;
+static int currentLetter=0;
 
 int game_init_graphics_mode(){
   vbe_mode_info_t mode_info;
@@ -117,6 +111,13 @@ Game * create_new_game(){
   if(load_pixmap(bullet_xpm,&game->bullet_img)==NULL)
     return NULL;
 
+  if(load_pixmap(score_menu_xpm,&game->highscore_background)==NULL)
+    return NULL;
+
+  game->player_name=(char *)malloc(6);
+  if(game->player_name==NULL)
+    return NULL;
+
   return game;
 }
 
@@ -133,9 +134,12 @@ int game_begin(){
   game->shot_fired=0;
   game->score=0;
   game->reload=0;
+  for(int i=0;i<5;i++)
+    game->player_name[i]=' ';
+  currentLetter=0;
   update_background();
   updateGameBuffer();
-  draw_score();
+  draw_score(250,0);
   if(draw_screen(game->disk->img,game->disk->x,game->disk->y)==-1)
     return -1;
   return 0;
@@ -187,7 +191,12 @@ int game_state_machine(){
     draw_mouse();
     break;
   case STATE_END_GAME:
-    
+    update_background();
+    updateGameBuffer();
+    game->state=STATE_SAVE_SCORE;
+    break;
+  case STATE_SAVE_SCORE:
+    draw_mouse();
     break;
   case STATE_END_PROGRAM:
     game->state=STATE_EXIT;
@@ -209,19 +218,19 @@ void treat_mouse_click(){
   switch (game->state)
   {
   case STATE_IN_MAIN_MENU:
-    if(game->game_mouse->x>=295 && game->game_mouse->x<=857){ 
-      if(game->game_mouse->y>=622 && game->game_mouse->y<=717)  //CHECK IF USER CLICKED ON EXIT
+    if((game->game_mouse->x+(game->game_mouse->img.width/2))>=295 && (game->game_mouse->x+(game->game_mouse->img.width/2))<=857){ 
+      if((game->game_mouse->y+(game->game_mouse->img.height/2))>=622 && (game->game_mouse->y+(game->game_mouse->img.height/2))<=717)  //CHECK IF USER CLICKED ON EXIT
         game->state=STATE_END_PROGRAM;
-      else if(game->game_mouse->y>=342 && game->game_mouse->y<=437) //CHECK IF USER CLICKED ON PLAY 
+      else if((game->game_mouse->y+(game->game_mouse->img.height/2))>=342 && (game->game_mouse->y+(game->game_mouse->img.height/2))<=437) //CHECK IF USER CLICKED ON PLAY 
         game->state=STATE_BEGIN_GAME;
       /*else if(game->game_mouse->y>=482 && game->game_mouse->y<=577) //CHECK IF USER CLICKED ON HIGHSCORE*/
     }
     break;
   case STATE_IN_PAUSE:
-    if(game->game_mouse->x>=(game->pause_menu->x+110) && game->game_mouse->x<=(game->pause_menu->x+110+180)){
-      if(game->game_mouse->y>=(game->pause_menu->y+148) && game->game_mouse->y<=(game->pause_menu->y+227))
+    if((game->game_mouse->x+(game->game_mouse->img.width/2))>=(game->pause_menu->x+110) && (game->game_mouse->x+(game->game_mouse->img.width/2))<=(game->pause_menu->x+110+180)){
+      if((game->game_mouse->y+(game->game_mouse->img.height/2))>=(game->pause_menu->y+148) && (game->game_mouse->y+(game->game_mouse->img.height/2))<=(game->pause_menu->y+227))
         game->state=STATE_DURING_GAME;
-      else if(game->game_mouse->y>=(game->pause_menu->y+254) && game->game_mouse->y<=(game->pause_menu->y+333))
+      else if((game->game_mouse->y+(game->game_mouse->img.height/2))>=(game->pause_menu->y+254) && (game->game_mouse->y+(game->game_mouse->img.height/2))<=(game->pause_menu->y+333))
         game->state=STATE_DRAW_MAIN_MENU;
     }
     break; 
@@ -236,8 +245,12 @@ void treat_mouse_click(){
         game->score++;
       }
       if(game->total_bullet_count==0)
-        game->state=STATE_DRAW_MAIN_MENU;
+        game->state=STATE_END_GAME;
     }
+    break;
+  case STATE_SAVE_SCORE:
+    if((game->game_mouse->x+(game->game_mouse->img.width/2))>=776 && (game->game_mouse->x+(game->game_mouse->img.width/2))<=1126 && (game->game_mouse->y+(game->game_mouse->img.height/2))>=626 && (game->game_mouse->y+(game->game_mouse->img.height/2))<=752)
+      game->state=STATE_DRAW_MAIN_MENU;
     break;
   default:
     break;
@@ -258,10 +271,8 @@ void draw_bullets(){
   }
 }
 
-void draw_score(){
-  //Get score string
-  int x=250;
-  int xDiff=50;
+void draw_score(int x,int y){
+  int xDiff=60;
   int intAux=game->score;
   int final_score=0;
   int number_of_digits=0;
@@ -279,7 +290,7 @@ void draw_score(){
     xpm_image_t number_img;
     parseScoreXpm(&number_img,final_score%10);
     final_score=final_score/10;
-    initBackgroundBuffer(number_img,x,0);
+    initBackgroundBuffer(number_img,x,y);
     number_of_digits--;
     x+=xDiff;
   }
@@ -373,10 +384,166 @@ void handle_keyboard_interrupts(){
   case R_BC:
     if(game->state==STATE_DURING_GAME && !game->reload)
       game->reload=1;
+    else if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='R';
+      currentLetter++;
+    }   
+    break;
+  case A_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='A';
+      currentLetter++;
+    }
+    break;
+  case B_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='B';
+      currentLetter++;
+    }
+    break;
+  case C_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='C';
+      currentLetter++;
+    }
+    break;
+  case D_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='D';
+      currentLetter++;
+    }
+    break;
+  case E_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='E';
+      currentLetter++;
+    }
+    break;
+  case F_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='F';
+      currentLetter++;
+    }
+    break;
+  case G_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='G';
+      currentLetter++;
+    }
+    break;
+  case H_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='H';
+      currentLetter++;
+    }
+    break;
+  case I_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='I';
+      currentLetter++;
+    }
+    break;
+  case J_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='J';
+      currentLetter++;
+    }
+    break;
+  case K_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='K';
+      currentLetter++;
+    }
+    break;
+  case L_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='L';
+      currentLetter++;
+    }
+    break;
+  case M_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='M';
+      currentLetter++;
+    }
+    break;
+  case N_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='N';
+      currentLetter++;
+    }
+    break;
+  case O_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='O';
+      currentLetter++;
+    }
+    break;
+  case P_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='P';
+      currentLetter++;
+    }
+    break;
+  case Q_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='Q';
+      currentLetter++;
+    }
+    break;
+  case S_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='S';
+      currentLetter++;
+    }
+    break;
+  case T_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='T';
+      currentLetter++;
+    }
+    break;
+  case U_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='U';
+      currentLetter++;
+    }
+    break;
+  case V_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='V';
+      currentLetter++;
+    }
+    break;
+  case W_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='W';
+      currentLetter++;
+    }
+    break;
+  case X_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='X';
+      currentLetter++;
+    }
+    break;
+  case Y_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='Y';
+      currentLetter++;
+    }
+    break;
+  case Z_BC:
+    if(game->state==STATE_SAVE_SCORE && currentLetter<5){
+      game->player_name[currentLetter]='Z';
+      currentLetter++;
+    }
     break;
   default:
     break;
   }
+  if(game->state==STATE_SAVE_SCORE)
+    draw_name();
 }
 
 void handle_mouse_interrupts(){
@@ -408,20 +575,21 @@ void handle_mouse_interrupts(){
 
 void update_game(){
   updateGameBuffer();
-  update_disk_coord();
-  
-  if(!out_of_bounds(game->disk->x,game->disk->y,game->disk->x+game->disk->img.width,game->disk->y+game->disk->img.height)){
-    if(game->disk->hit)
-    {
-      if(draw_screen(game->disk->splatter_img,game->disk->x,game->disk->y)==-1)
-        return ;
+  if(game->state==STATE_DURING_GAME){
+    update_disk_coord();
+    if(!out_of_bounds(game->disk->x,game->disk->y,game->disk->x+game->disk->img.width,game->disk->y+game->disk->img.height)){
+      if(game->disk->hit)
+      {
+        if(draw_screen(game->disk->splatter_img,game->disk->x,game->disk->y)==-1)
+          return ;
+      }
+      else
+        if(draw_screen(game->disk->img,game->disk->x,game->disk->y)==-1)
+          return ;
     }
     else
-      if(draw_screen(game->disk->img,game->disk->x,game->disk->y)==-1)
-        return ;
+      game->disk->out_of_bounds=1;
   }
-  else
-    game->disk->out_of_bounds=1;
 }
 
 void handle_timer_interrupts(){
@@ -448,7 +616,134 @@ void handle_timer_interrupts(){
 }
 
 void update_background(){
-  initBackgroundBuffer(game->game_background,0,0);
-  draw_bullets();
-  draw_score();
+  if(game->state!=STATE_END_GAME){
+    initBackgroundBuffer(game->game_background,0,0);
+    draw_bullets();
+    draw_score(250,0);
+  }else{
+    initBackgroundBuffer(game->highscore_background,0,0);
+    draw_score(580,286);
+  }
+  
+}
+
+void draw_name(){
+  if(strlen(game->player_name)==0 || currentLetter==0)  
+    return;
+  int varX=60;
+  int i=currentLetter-1;
+  int x=400+varX*(i);
+  int y=635;
+  
+  xpm_image_t image;
+  if(game->player_name[i]=='A'){
+    if(load_pixmap(a_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='B'){
+    if(load_pixmap(b_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='C'){
+    if(load_pixmap(c_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='D'){
+    if(load_pixmap(d_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='E'){
+    if(load_pixmap(e_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='F'){
+    if(load_pixmap(f_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='G'){
+    if(load_pixmap(g_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='H'){
+    if(load_pixmap(h_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='I'){
+    if(load_pixmap(i_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='J'){
+    if(load_pixmap(j_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='K'){
+    if(load_pixmap(k_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='L'){
+    if(load_pixmap(l_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='M'){
+    if(load_pixmap(m_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='N'){
+    if(load_pixmap(n_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='O'){
+    if(load_pixmap(o_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='P'){
+    if(load_pixmap(p_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='Q'){
+    if(load_pixmap(q_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='R'){
+    if(load_pixmap(r_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='S'){
+    if(load_pixmap(s_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='T'){
+    if(load_pixmap(t_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='U'){
+    if(load_pixmap(u_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='V'){
+    if(load_pixmap(v_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='W'){
+    if(load_pixmap(w_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='X'){
+    if(load_pixmap(x_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='Y'){
+    if(load_pixmap(y_xpm,&image)==NULL)
+      return;
+  }
+  else if(game->player_name[i]=='Z'){
+    if(load_pixmap(z_xpm,&image)==NULL)
+      return;
+  }
+  else
+  {printf("return\n");
+    return;
+  }
+  
+  draw_screen(image,x,y);
 }

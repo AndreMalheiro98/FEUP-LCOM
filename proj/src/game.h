@@ -19,6 +19,8 @@ typedef struct{
     xpm_image_t bullet_img;
     int current_bullet_count;
     bool reload;
+    xpm_image_t highscore_background;
+    char *player_name;
 }Game;
 
 #define STATE_DRAW_MAIN_MENU 0
@@ -31,6 +33,7 @@ typedef struct{
 #define STATE_DRAW_PAUSE 7
 #define STATE_IN_PAUSE 8
 #define STATE_END_PROGRAM 9
+#define STATE_SAVE_SCORE 10
 
 int game_init_graphics_mode();
 int get_game_state();
@@ -49,7 +52,8 @@ void handle_keyboard_interrupts();
 void handle_mouse_interrupts();
 void update_game();
 void handle_timer_interrupts();
-void draw_score();
+void draw_score(int x,int y);
 int parseScoreXpm(xpm_image_t *xpm,int i);
 void update_background();
+void draw_name();
 #endif

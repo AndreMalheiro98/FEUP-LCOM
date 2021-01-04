@@ -61,6 +61,81 @@ enum KBC_KEY (Verify_Key)(uint8_t scancode) {
     case ENTER_KEY_BREAKCODE:
       return ENTER_BC;
       break;
+    case A_KEY_BREAKCODE:
+      return A_BC;
+      break;
+    case B_KEY_BREAKCODE:
+      return B_BC;
+      break;
+    case C_KEY_BREAKCODE:
+      return C_BC;
+      break;
+    case D_KEY_BREAKCODE:
+      return D_BC;
+      break;
+    case E_KEY_BREAKCODE:
+      return E_BC;
+      break;
+    case F_KEY_BREAKCODE:
+      return F_BC;
+      break;
+    case G_KEY_BREAKCODE:
+      return G_BC;
+      break;
+    case H_KEY_BREAKCODE:
+      return H_BC;
+      break;
+    case I_KEY_BREAKCODE:
+      return I_BC;
+      break;
+    case J_KEY_BREAKCODE:
+      return J_BC;
+      break;
+    case K_KEY_BREAKCODE:
+      return K_BC;
+      break;
+    case L_KEY_BREAKCODE:
+      return L_BC;
+      break;
+    case M_KEY_BREAKCODE:
+      return M_BC;
+      break;
+    case N_KEY_BREAKCODE:
+      return N_BC;
+      break;
+    case O_KEY_BREAKCODE:
+      return O_BC;
+      break;
+    case P_KEY_BREAKCODE:
+      return P_BC;
+      break;
+    case Q_KEY_BREAKCODE:
+      return Q_BC;
+      break;
+    case S_KEY_BREAKCODE:
+      return  S_BC; 
+      break;
+    case T_KEY_BREAKCODE:
+      return T_BC;
+      break;
+    case U_KEY_BREAKCODE:
+      return U_BC;
+      break;
+    case V_KEY_BREAKCODE:
+      return V_BC;
+      break;
+    case W_KEY_BREAKCODE:
+      return W_BC;
+      break;
+    case X_KEY_BREAKCODE:
+      return X_BC;
+      break;
+    case Y_KEY_BREAKCODE:
+      return Y_BC;
+      break;
+    case Z_KEY_BREAKCODE:
+      return Z_BC;
+      break;
     default:
       return NO_KEY;
       break;
