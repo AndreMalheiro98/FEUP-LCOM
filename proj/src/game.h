@@ -13,6 +13,8 @@ typedef struct{
     Menu *pause_menu;
     xpm_image_t game_background;
     Disk * disk;
+    int bullet_count;
+    bool shot_fired;
 }Game;
 
 #define STATE_DRAW_MAIN_MENU 0
@@ -20,10 +22,11 @@ typedef struct{
 #define STATE_BEGIN_GAME 2
 #define STATE_INSTRUCTIONS 3
 #define STATE_DURING_GAME 4
-#define STATE_DRAW_PAUSE 7
-#define STATE_IN_PAUSE 8
 #define STATE_END_GAME 5
 #define STATE_EXIT 6
+#define STATE_DRAW_PAUSE 7
+#define STATE_IN_PAUSE 8
+#define STATE_END_PROGRAM 9
 
 int game_init_graphics_mode();
 int get_game_state();
@@ -41,4 +44,5 @@ void draw_mouse();
 void handle_keyboard_interrupts();
 void handle_mouse_interrupts();
 void update_game();
+void handle_timer_interrupts();
 #endif

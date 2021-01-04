@@ -20,11 +20,19 @@ Disk * create_disk(){
 }
 
 void reset_disk(){
-    disk->kill=0;
+    disk->hit=0;
+    disk->out_of_bounds=0;
     disk->x=rand() % (get_hres() - disk->img.width);
     disk->y=rand() % (get_vres() - disk->img.height);
-    disk->xVar=rand() % 5;
-    disk->yVar=rand() % 5;
+
+    if(disk->x >(get_hres()/2))
+        disk->xVar=-3;
+    else
+        disk->xVar=3;
+    if(disk->y>(get_vres()/2))
+        disk->yVar=-3;
+    else
+        disk->yVar=3; 
 }
 
 void update_disk_coord(){
