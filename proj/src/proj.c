@@ -38,7 +38,7 @@ static int print_usage() {
   return 1;
 }
 #include "game.h"
-extern int timer_tick_counter;
+
 int(proj_main_loop)(int argc, char *argv[]) {
   /* 
    * Substitute the code below by your own
@@ -105,8 +105,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
         }
         
         if(msg.m_notify.interrupts & timer_mask){//timer interrupts
-          timer_int_handler();
-          game_state_machine();
+          handle_timer_interrupts();
         }
         
         break;

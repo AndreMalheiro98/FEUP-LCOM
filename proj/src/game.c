@@ -6,6 +6,8 @@ extern uint8_t bytes[2];
 extern bool kbc_flag;
 extern uint8_t mouse_data;
 extern bool mouse_flag;
+extern int timer_tick_counter;
+int ticks_between_shot=0;
 
 int game_init_graphics_mode(){
   vbe_mode_info_t mode_info;
@@ -112,6 +114,8 @@ int game_begin(){
   game->disk=create_disk();
   if(game->disk==NULL)
     return -1;
+  game->bullet_count=9;
+  game->shot_fired=0;
   updateGameBuffer();
   if(draw_screen(game->disk->img,game->disk->x,game->disk->y)==-1)
     return -1;
@@ -151,10 +155,18 @@ int game_state_machine(){
       game->state= STATE_DURING_GAME;
     break;
   case STATE_DURING_GAME:
+    if(game->disk->out_of_bounds)
+    {
+      reset_disk();
+      
+    }
     update_game();
     draw_mouse();
     break;
   case STATE_END_GAME:
+    
+    break;
+  case STATE_END_PROGRAM:
     game->state=STATE_EXIT;
     break;
   case STATE_DRAW_PAUSE:
@@ -176,7 +188,7 @@ void treat_mouse_click(){
   case STATE_IN_MAIN_MENU:
     if(game->game_mouse->x>=295 && game->game_mouse->x<=857){ 
       if(game->game_mouse->y>=622 && game->game_mouse->y<=717)  //CHECK IF USER CLICKED ON EXIT
-        game->state=STATE_END_GAME;
+        game->state=STATE_END_PROGRAM;
       else if(game->game_mouse->y>=342 && game->game_mouse->y<=437) //CHECK IF USER CLICKED ON PLAY 
         game->state=STATE_BEGIN_GAME;
       /*else if(game->game_mouse->y>=482 && game->game_mouse->y<=577) //CHECK IF USER CLICKED ON HIGHSCORE*/
@@ -190,8 +202,15 @@ void treat_mouse_click(){
         game->state=STATE_DRAW_MAIN_MENU;
     } 
   case STATE_DURING_GAME:
-    if((game->game_mouse->x+game->game_mouse->img.width/2)>=game->disk->x && (game->game_mouse->x+game->game_mouse->img.width/2)<=(game->disk->x+game->disk->img.width) && (game->game_mouse->y+game->game_mouse->img.height/2)>=game->disk->y && (game->game_mouse->y+game->game_mouse->img.height/2)<=(game->disk->y+game->disk->img.height))
-      game->disk->kill=1;
+    if(!game->shot_fired){
+      game->shot_fired=1;
+      game->bullet_count--;
+      if((game->game_mouse->x+game->game_mouse->img.width/2)>=game->disk->x && (game->game_mouse->x+game->game_mouse->img.width/2)<=(game->disk->x+game->disk->img.width) && (game->game_mouse->y+game->game_mouse->img.height/2)>=game->disk->y && (game->game_mouse->y+game->game_mouse->img.height/2)<=(game->disk->y+game->disk->img.height) && !game->disk->hit)
+        game->disk->hit=1;
+      if(game->bullet_count==0)
+        game->state=STATE_DRAW_MAIN_MENU;
+    }
+    break;
   default:
     break;
   }
@@ -275,7 +294,7 @@ void update_game(){
   update_disk_coord();
   
   if(!out_of_bounds(game->disk->x,game->disk->y,game->disk->x+game->disk->img.width,game->disk->y+game->disk->img.height)){
-    if(game->disk->kill)
+    if(game->disk->hit)
     {
       if(draw_screen(game->disk->splatter_img,game->disk->x,game->disk->y)==-1)
         return ;
@@ -283,6 +302,20 @@ void update_game(){
     else
       if(draw_screen(game->disk->img,game->disk->x,game->disk->y)==-1)
         return ;
-    
   }
+  else
+    game->disk->out_of_bounds=1;
+}
+
+void handle_timer_interrupts(){
+  timer_int_handler();
+  game_state_machine();
+  if(game->shot_fired && ticks_between_shot<40)
+    ticks_between_shot++;
+  else if(ticks_between_shot==40)
+  {
+    game->shot_fired=0;
+    ticks_between_shot=0;
+  }
+
 }
