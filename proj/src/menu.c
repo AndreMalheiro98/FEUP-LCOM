@@ -1,8 +1,8 @@
 #include <lcom/lcf.h>
 #include "menu.h"
 #include "vbe.h"
-#include "../Images/main_menu.xpm"
-#include "../Images/pause_menu.xpm"
+#include "../images/main_menu.xpm"
+#include "../images/pause_menu.xpm"
 static Menu * main_menu=NULL;
 static Menu * pause_menu=NULL;
 

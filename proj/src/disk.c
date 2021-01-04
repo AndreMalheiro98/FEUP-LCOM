@@ -1,8 +1,8 @@
 #include <lcom/lcf.h>
 #include "disk.h"
 #include "vbe.h"
-#include "../Images/disk.xpm"
-#include "../Images/diskHit.xpm"
+#include "../images/disk.xpm"
+#include "../images/diskHit.xpm"
 
 static Disk *disk =NULL;
 

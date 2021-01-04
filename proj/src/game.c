@@ -1,17 +1,17 @@
 #include <lcom/lcf.h>
 #include "game.h"
-#include "../Images/game_background.xpm"
+#include "../images/game_background.xpm"
 #include <string.h>
-#include "../Images/textCharacters/number_0.xpm"
-#include "../Images/textCharacters/number_1.xpm"
-#include "../Images/textCharacters/number_2.xpm"
-#include "../Images/textCharacters/number_3.xpm"
-#include "../Images/textCharacters/number_4.xpm"
-#include "../Images/textCharacters/number_5.xpm"
-#include "../Images/textCharacters/number_6.xpm"
-#include "../Images/textCharacters/number_7.xpm"
-#include "../Images/textCharacters/number_8.xpm"
-#include "../Images/textCharacters/number_9.xpm"
+#include "../images/textCharacters/number_0.xpm"
+#include "../images/textCharacters/number_1.xpm"
+#include "../images/textCharacters/number_2.xpm"
+#include "../images/textCharacters/number_3.xpm"
+#include "../images/textCharacters/number_4.xpm"
+#include "../images/textCharacters/number_5.xpm"
+#include "../images/textCharacters/number_6.xpm"
+#include "../images/textCharacters/number_7.xpm"
+#include "../images/textCharacters/number_8.xpm"
+#include "../images/textCharacters/number_9.xpm"
 
 static Game *game;
 extern uint8_t bytes[2];

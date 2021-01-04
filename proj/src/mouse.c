@@ -2,7 +2,7 @@
 #include "mouse.h"
 #include "kbc.h"
 #include "vbe.h"
-#include "../Images/aim.xpm"
+#include "../images/aim.xpm"
 static Mouse *mouse=NULL;
 int hook;
 uint8_t mouse_data;
