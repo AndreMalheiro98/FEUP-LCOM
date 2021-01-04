@@ -13,9 +13,12 @@ typedef struct{
     Menu *pause_menu;
     xpm_image_t game_background;
     Disk * disk;
-    int bullet_count;
+    int total_bullet_count;
     bool shot_fired;
     int score;
+    xpm_image_t bullet_img;
+    int current_bullet_count;
+    bool reload;
 }Game;
 
 #define STATE_DRAW_MAIN_MENU 0
