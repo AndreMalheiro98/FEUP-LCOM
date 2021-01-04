@@ -19,7 +19,7 @@ ENTER_BC = 6  /* enum Enter breakcode*/
 **/
 void (kbc_ih)();
 /**
- * @brief 
+ * @brief Get the key pressed by the user and return its scancode
 **/
 enum KBC_KEY (get_key_pressed)(bool make, int number_of_bytes, uint8_t * key_codes);
 /**
