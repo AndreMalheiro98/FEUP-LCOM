@@ -98,6 +98,9 @@ Game * create_new_game(){
 
   if(load_pixmap(game_background_xpm,&game->game_background)==NULL)
     return NULL;
+
+  initBackgroundBuffer(game->game_background);
+  
   return game;
 }
 
@@ -106,11 +109,10 @@ int get_game_state(){
 }
 
 int game_begin(){
-  if(draw_screen(game->game_background,0,0)==-1)
-    return -1;
   game->disk=create_disk();
   if(game->disk==NULL)
     return -1;
+  updateGameBuffer();
   if(draw_screen(game->disk->img,game->disk->x,game->disk->y)==-1)
     return -1;
   return 0;
@@ -145,12 +147,10 @@ int game_state_machine(){
     draw_mouse();
     break;
   case STATE_BEGIN_GAME:
-    printf("begin game\n");
     if(!game_begin())
       game->state= STATE_DURING_GAME;
     break;
   case STATE_DURING_GAME:
-    printf("during game\n");
     update_game();
     draw_mouse();
     break;
@@ -268,10 +268,9 @@ void handle_mouse_interrupts(){
 }
 
 void update_game(){
-  printf("%d update\n",game->state);
-  if(draw_screen(game->game_background,0,0)==-1)
-    return ;
+  updateGameBuffer();
   update_disk_coord();
+  
   if(!out_of_bounds(game->disk->x,game->disk->y,game->disk->x+game->disk->img.width,game->disk->y+game->disk->img.height)){
     if(draw_screen(game->disk->img,game->disk->x,game->disk->y)==-1)
       return ;

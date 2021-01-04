@@ -7,6 +7,7 @@ static int hres,vres;
 static char *video_mem;
 static char *buffer;
 static char *mouse_buffer;
+static char *background_buffer;
 static unsigned int video_mem_size;
 static uint8_t bytesPerPixel;
 
@@ -65,6 +66,7 @@ void * (init_graphics_mode)(uint16_t mode,vbe_mode_info_t *info){
   video_mem=vm_map_phys(SELF,(void *) mr.mr_base,vram_size);
   buffer= (char*)malloc(vram_size);
   mouse_buffer=(char *)malloc(vram_size);
+  background_buffer=(char *)malloc(vram_size);
   if(video_mem==MAP_FAILED)
   {
     panic("Couldn't map video memory\n");
@@ -218,10 +220,19 @@ void update_mouse(xpm_image_t mouse_img,int x,int y){
 void free_buffers(){
   free(buffer);
   free(mouse_buffer);
+  free(background_buffer);
 }
 
 int out_of_bounds(uint16_t leftCornerX,uint16_t leftCornerY,uint16_t rightCornerX,uint16_t rightCornerY){
   if(leftCornerX<0 || leftCornerY<0 || rightCornerX>hres || rightCornerY>vres)
     return 1;
   return 0;
+}
+
+void initBackgroundBuffer(xpm_image_t background_img){
+  vg_display_pixmap(background_img,0,0,background_buffer);
+}
+
+void updateGameBuffer(){
+  memcpy(buffer,background_buffer,video_mem_size);
 }
