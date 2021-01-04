@@ -52,7 +52,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
   bool const grayscale = false;*/
  // uint16_t const delay = 600;
   //uint16_t mode;
-
+  srand(time(NULL));
   if (argc !=0)
     return print_usage();
 /*
@@ -106,7 +106,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
         
         if(msg.m_notify.interrupts & timer_mask){//timer interrupts
           timer_int_handler();
-          game_update();
+          game_state_machine();
         }
         
         break;

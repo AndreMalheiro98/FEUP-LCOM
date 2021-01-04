@@ -98,6 +98,9 @@ Game * create_new_game(){
 
   if(load_pixmap(game_background_xpm,&game->game_background)==NULL)
     return NULL;
+
+  initBackgroundBuffer(game->game_background);
+
   return game;
 }
 
@@ -106,9 +109,12 @@ int get_game_state(){
 }
 
 int game_begin(){
-  if(draw_screen(game->game_background,0,0)==-1)
+  game->disk=create_disk();
+  if(game->disk==NULL)
     return -1;
-  
+  updateGameBuffer();
+  if(draw_screen(game->disk->img,game->disk->x,game->disk->y)==-1)
+    return -1;
   return 0;
 }
 
@@ -130,7 +136,7 @@ int draw_screen(xpm_image_t xpm_image,int x,int y){
   return 0;
 }
 
-int game_update(){
+int game_state_machine(){
   switch (game->state)
   {
   case STATE_DRAW_MAIN_MENU:
@@ -145,6 +151,7 @@ int game_update(){
       game->state= STATE_DURING_GAME;
     break;
   case STATE_DURING_GAME:
+    update_game();
     draw_mouse();
     break;
   case STATE_END_GAME:
@@ -178,10 +185,13 @@ void treat_mouse_click(){
   case STATE_IN_PAUSE:
     if(game->game_mouse->x>=(game->pause_menu->x+110) && game->game_mouse->x<=(game->pause_menu->x+857)){
       if(game->game_mouse->y>=(game->pause_menu->y+148) && game->game_mouse->y<=(game->pause_menu->y+227))
-        game->state=STATE_BEGIN_GAME;
+        game->state=STATE_DURING_GAME;
       else if(game->game_mouse->y>=(game->pause_menu->y+254) && game->game_mouse->y<=(game->pause_menu->y+333))
         game->state=STATE_DRAW_MAIN_MENU;
     } 
+  case STATE_DURING_GAME:
+    if((game->game_mouse->x+game->game_mouse->img.width/2)>=game->disk->x && (game->game_mouse->x+game->game_mouse->img.width/2)<=(game->disk->x+game->disk->img.width) && (game->game_mouse->y+game->game_mouse->img.height/2)>=game->disk->y && (game->game_mouse->y+game->game_mouse->img.height/2)<=(game->disk->y+game->disk->img.height))
+      game->disk->kill=1;
   default:
     break;
   }
@@ -226,7 +236,7 @@ void handle_keyboard_interrupts(){
     if(game->state==STATE_DURING_GAME)
       game->state=STATE_DRAW_PAUSE;
     else if(game->state==STATE_IN_PAUSE)
-      game->state=STATE_BEGIN_GAME;
+      game->state=STATE_DURING_GAME;
     break;
   default:
     break;
@@ -257,5 +267,22 @@ void handle_mouse_interrupts(){
     
     if(pacote_dados.bytes[0] & MOUSE_LB)
       treat_mouse_click();
+  }
+}
+
+void update_game(){
+  updateGameBuffer();
+  update_disk_coord();
+  
+  if(!out_of_bounds(game->disk->x,game->disk->y,game->disk->x+game->disk->img.width,game->disk->y+game->disk->img.height)){
+    if(game->disk->kill)
+    {
+      if(draw_screen(game->disk->splatter_img,game->disk->x,game->disk->y)==-1)
+        return ;
+    }
+    else
+      if(draw_screen(game->disk->img,game->disk->x,game->disk->y)==-1)
+        return ;
+    
   }
 }

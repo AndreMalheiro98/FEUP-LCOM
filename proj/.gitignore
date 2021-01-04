@@ -9,3 +9,4 @@ kbc.o
 timer.o
 utils.o
 highscore.o
+disk.o
