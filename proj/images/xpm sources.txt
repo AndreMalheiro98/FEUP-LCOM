@@ -1,0 +1,6 @@
+aim.xpm - art from - https://opengameart.org/content/aim
+game_background.xpm - art from - https://craftpix.net/
+pause_menu.xpm - art made by us - https://viliusle.github.io/miniPaint/
+disk.xpm - https://www.hiclipart.com/free-transparent-background-png-clipart-ikxmm
+splatter.xpm - https://www.freeiconspng.com/img/44463
+Guns in HighScore Screen - Image by <a href="https://pixabay.com/users/mwewering-185784/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=629670">Matthias Wewering</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=629670">Pixabay</a>
