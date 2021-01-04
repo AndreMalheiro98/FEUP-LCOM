@@ -182,18 +182,12 @@ void mouse_update_position(struct packet data){
     mouse->x+=data.delta_x;
     mouse->y-=data.delta_y;
     if((mouse->x+mouse->img.width)>get_hres())
-    {
-        printf("x-%d\t",mouse->x);
         mouse->x=get_hres()-mouse->img.width;
-    }
     else if(mouse->x<0)
-        mouse->x=mouse->img.width/2;
+        mouse->x=0;
 
     if((mouse->y+mouse->img.height)>get_vres())
-    {
-        printf("y-%d\t",mouse->y);
         mouse->y=get_vres()-mouse->img.height;
-    }
     else if(mouse->y<0)
-        mouse->y=mouse->img.height/2;
+        mouse->y=0;
 }

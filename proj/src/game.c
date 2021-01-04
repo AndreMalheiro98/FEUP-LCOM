@@ -239,7 +239,7 @@ void draw_mouse(){
 
 void draw_score(){
   //Get score string
-  int x=0;
+  int x=250;
   int xDiff=50;
   int intAux=game->score;
   int final_score=0;

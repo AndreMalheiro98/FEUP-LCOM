@@ -223,7 +223,7 @@ void free_buffers(){
   free(background_buffer);
 }
 
-int out_of_bounds(uint16_t leftCornerX,uint16_t leftCornerY,uint16_t rightCornerX,uint16_t rightCornerY){
+int out_of_bounds(int16_t leftCornerX,int16_t leftCornerY,int16_t rightCornerX,int16_t rightCornerY){
   if(leftCornerX<0 || leftCornerY<0 || rightCornerX>hres || rightCornerY>vres)
     return 1;
   return 0;
