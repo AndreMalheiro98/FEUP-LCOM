@@ -219,3 +219,9 @@ void free_buffers(){
   free(buffer);
   free(mouse_buffer);
 }
+
+int out_of_bounds(uint16_t leftCornerX,uint16_t leftCornerY,uint16_t rightCornerX,uint16_t rightCornerY){
+  if(leftCornerX<0 || leftCornerY<0 || rightCornerX>hres || rightCornerY>vres)
+    return 1;
+  return 0;
+}

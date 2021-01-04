@@ -8,3 +8,4 @@ mouse.o
 kbc.o
 timer.o
 utils.o
+disk.o
