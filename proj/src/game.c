@@ -218,12 +218,13 @@ void treat_mouse_click(){
     }
     break;
   case STATE_IN_PAUSE:
-    if(game->game_mouse->x>=(game->pause_menu->x+110) && game->game_mouse->x<=(game->pause_menu->x+857)){
+    if(game->game_mouse->x>=(game->pause_menu->x+110) && game->game_mouse->x<=(game->pause_menu->x+110+180)){
       if(game->game_mouse->y>=(game->pause_menu->y+148) && game->game_mouse->y<=(game->pause_menu->y+227))
         game->state=STATE_DURING_GAME;
       else if(game->game_mouse->y>=(game->pause_menu->y+254) && game->game_mouse->y<=(game->pause_menu->y+333))
         game->state=STATE_DRAW_MAIN_MENU;
-    } 
+    }
+    break; 
   case STATE_DURING_GAME:
     if(!game->shot_fired && game->current_bullet_count>0 && !game->reload){
       game->shot_fired=1;
