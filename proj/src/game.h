@@ -15,6 +15,7 @@ typedef struct{
     Disk * disk;
     int bullet_count;
     bool shot_fired;
+    int score;
 }Game;
 
 #define STATE_DRAW_MAIN_MENU 0
@@ -45,4 +46,7 @@ void handle_keyboard_interrupts();
 void handle_mouse_interrupts();
 void update_game();
 void handle_timer_interrupts();
+void draw_score();
+int parseScoreXpm(xpm_image_t *xpm,int i);
+void update_background();
 #endif
