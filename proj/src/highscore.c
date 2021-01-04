@@ -30,7 +30,7 @@ int highScore(int score){
 		i++;
 	}
     */
-	fclose(scoresFile);
+	fclose(highscoresFile);
 
 	if (i < 10)
 		index = i;
