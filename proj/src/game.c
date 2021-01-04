@@ -12,14 +12,15 @@
 #include "../images/textCharacters/number_7.xpm"
 #include "../images/textCharacters/number_8.xpm"
 #include "../images/textCharacters/number_9.xpm"
-
+#include "../images/bullet.xpm"
 static Game *game;
 extern uint8_t bytes[2];
 extern bool kbc_flag;
 extern uint8_t mouse_data;
 extern bool mouse_flag;
 extern int timer_tick_counter;
-int ticks_between_shot=0;
+static int ticks_between_shot=0;
+static int ticks_during_reload=0;
 
 int game_init_graphics_mode(){
   vbe_mode_info_t mode_info;
@@ -113,6 +114,9 @@ Game * create_new_game(){
   if(load_pixmap(game_background_xpm,&game->game_background)==NULL)
     return NULL;
 
+  if(load_pixmap(bullet_xpm,&game->bullet_img)==NULL)
+    return NULL;
+
   return game;
 }
 
@@ -124,9 +128,11 @@ int game_begin(){
   game->disk=create_disk();
   if(game->disk==NULL)
     return -1;
-  game->bullet_count=15;
+  game->total_bullet_count=15;
+  game->current_bullet_count=3;
   game->shot_fired=0;
   game->score=0;
+  game->reload=0;
   update_background();
   updateGameBuffer();
   draw_score();
@@ -168,8 +174,12 @@ int game_state_machine(){
       game->state= STATE_DURING_GAME;
     break;
   case STATE_DURING_GAME:
-    if(game->disk->hit)
+    if((game->shot_fired && ticks_between_shot==1) || (game->reload && ticks_during_reload==0))
+    {
       update_background();
+      if(game->reload && ticks_during_reload==0)
+        game->reload=0;
+    }
     if(game->disk->out_of_bounds)
       reset_disk();
     
@@ -215,15 +225,16 @@ void treat_mouse_click(){
         game->state=STATE_DRAW_MAIN_MENU;
     } 
   case STATE_DURING_GAME:
-    if(!game->shot_fired){
+    if(!game->shot_fired && game->current_bullet_count>0 && !game->reload){
       game->shot_fired=1;
-      game->bullet_count--;
+      game->total_bullet_count--;
+      game->current_bullet_count--;
       if((game->game_mouse->x+game->game_mouse->img.width/2)>=game->disk->x && (game->game_mouse->x+game->game_mouse->img.width/2)<=(game->disk->x+game->disk->img.width) && (game->game_mouse->y+game->game_mouse->img.height/2)>=game->disk->y && (game->game_mouse->y+game->game_mouse->img.height/2)<=(game->disk->y+game->disk->img.height) && !game->disk->hit)
       {
         game->disk->hit=1;
         game->score++;
       }
-      if(game->bullet_count==0)
+      if(game->total_bullet_count==0)
         game->state=STATE_DRAW_MAIN_MENU;
     }
     break;
@@ -237,9 +248,18 @@ void draw_mouse(){
   refresh_screen();
 }
 
+void draw_bullets(){
+  int x=0,y=get_vres()-game->bullet_img.height;
+  for(int i=0;i<game->current_bullet_count;i++)
+  {
+    initBackgroundBuffer(game->bullet_img,x,y);
+    x+=game->bullet_img.width;
+  }
+}
+
 void draw_score(){
   //Get score string
-  int x=0;
+  int x=250;
   int xDiff=50;
   int intAux=game->score;
   int final_score=0;
@@ -349,6 +369,10 @@ void handle_keyboard_interrupts(){
     else if(game->state==STATE_IN_PAUSE)
       game->state=STATE_DURING_GAME;
     break;
+  case R_BC:
+    if(game->state==STATE_DURING_GAME && !game->reload)
+      game->reload=1;
+    break;
   default:
     break;
   }
@@ -401,7 +425,16 @@ void update_game(){
 
 void handle_timer_interrupts(){
   timer_int_handler();
-  game_state_machine();
+  if(game->reload && ticks_during_reload<60)
+    ticks_during_reload++;
+  else if(ticks_during_reload==60)
+  {
+    if(game->total_bullet_count>=3)
+      game->current_bullet_count=3;
+    else
+      game->current_bullet_count=game->total_bullet_count;
+    ticks_during_reload=0;
+  }
   if(game->shot_fired && ticks_between_shot<40)
     ticks_between_shot++;
   else if(ticks_between_shot==40)
@@ -409,10 +442,12 @@ void handle_timer_interrupts(){
     game->shot_fired=0;
     ticks_between_shot=0;
   }
+  game_state_machine();
 
 }
 
 void update_background(){
   initBackgroundBuffer(game->game_background,0,0);
+  draw_bullets();
   draw_score();
 }
