@@ -36,7 +36,7 @@ void (vg_draw_pixel)(uint16_t x,uint16_t y,uint32_t color,char *end_buffer);
 /**
  * @brief  
 **/
-int (vg_draw_pixmap)(xpm_map_t xpm,int x,int y);
+int (vg_draw_pixmap)(xpm_image_t img,int x,int y);
 /**
  * @brief  
 **/

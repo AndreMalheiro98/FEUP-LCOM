@@ -1,8 +1,6 @@
 #include <lcom/lcf.h>
 #include "game.h"
 #include "../Images/game_background.xpm"
-#include "../Images/main_menu.xpm"
-#include "../Images/pause_menu.xpm"
 static Game *game;
 extern uint8_t bytes[2];
 extern bool kbc_flag;
@@ -74,6 +72,8 @@ Game * create_new_game(){
     game=(Game *)malloc(sizeof(Game));
   else
     nu=1;
+  game->main_menu=NULL;
+  game->pause_menu=NULL;
   game->game_mouse=get_mouse();
   if(game->game_mouse==NULL || nu==1)
   {
@@ -83,6 +83,21 @@ Game * create_new_game(){
   game->state=STATE_DRAW_MAIN_MENU;
   game->game_mouse->x=get_hres()/2;
   game->game_mouse->y=get_vres()/2;
+
+  game->main_menu=get_menu(0);
+  if(game->main_menu==NULL)
+    return NULL;
+  game->main_menu->x=0;
+  game->main_menu->y=0;
+  
+  game->pause_menu=get_menu(1);
+  if(game->pause_menu==NULL)
+    return NULL;
+  game->pause_menu->x=400;
+  game->pause_menu->y=200;
+
+  if(load_pixmap(game_background_xpm,&game->game_background)==NULL)
+    return NULL;
   return game;
 }
 
@@ -91,7 +106,7 @@ int get_game_state(){
 }
 
 int game_begin(){
-  if(draw_screen(game_background_xpm,0,0)==-1)
+  if(draw_screen(game->game_background,0,0)==-1)
     return -1;
   
   return 0;
@@ -99,6 +114,7 @@ int game_begin(){
 
 void eliminate_game(){
   eliminate_Mouse();
+  delete_menus();
   free_buffers();
   free(game);
 }
@@ -107,7 +123,7 @@ void update_mouse_coord(struct packet data){
   mouse_update_position(data);
 }
 
-int draw_screen(xpm_map_t xpm_image,int x,int y){
+int draw_screen(xpm_image_t xpm_image,int x,int y){
   if(vg_draw_pixmap(xpm_image,x,y)!=0)
     return -1;
   draw_mouse();
@@ -118,7 +134,7 @@ int game_update(){
   switch (game->state)
   {
   case STATE_DRAW_MAIN_MENU:
-    if(!draw_screen(main_menu_xpm,0,0))
+    if(!draw_screen(game->main_menu->img,game->main_menu->x,game->main_menu->y))
       game->state=STATE_IN_MAIN_MENU;
     break;
   case STATE_IN_MAIN_MENU:
@@ -135,7 +151,7 @@ int game_update(){
     game->state=STATE_EXIT;
     break;
   case STATE_DRAW_PAUSE:
-    if(!draw_screen(pause_menu_xpm,0,0))
+    if(!draw_screen(game->pause_menu->img,game->pause_menu->x,game->pause_menu->y))
       game->state=STATE_IN_PAUSE;
     break;
   case STATE_IN_PAUSE:
@@ -160,10 +176,10 @@ void treat_mouse_click(){
     }
     break;
   case STATE_IN_PAUSE:
-    if(game->game_mouse->x>=110 && game->game_mouse->x<=857){
-      if(game->game_mouse->y>=148 && game->game_mouse->y<=227)
+    if(game->game_mouse->x>=(game->pause_menu->x+110) && game->game_mouse->x<=(game->pause_menu->x+857)){
+      if(game->game_mouse->y>=(game->pause_menu->y+148) && game->game_mouse->y<=(game->pause_menu->y+227))
         game->state=STATE_BEGIN_GAME;
-      else if(game->game_mouse->y>=254 && game->game_mouse->y<=333)
+      else if(game->game_mouse->y>=(game->pause_menu->y+254) && game->game_mouse->y<=(game->pause_menu->y+333))
         game->state=STATE_DRAW_MAIN_MENU;
     } 
   default:

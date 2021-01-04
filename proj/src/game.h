@@ -4,9 +4,14 @@
 #include "mouse.h"
 #include "timer.h"  
 #include "keyboard.h"
+#include "menu.h"
+
 typedef struct{
     Mouse *game_mouse;
     int state;
+    Menu *main_menu;
+    Menu *pause_menu;
+    xpm_image_t game_background;
 }Game;
 
 #define STATE_DRAW_MAIN_MENU 0
@@ -28,7 +33,7 @@ Game * create_new_game();
 int game_begin();
 void eliminate_game();
 void update_mouse_coord(struct packet data);
-int draw_screen(xpm_map_t xpm_image,int x,int y);
+int draw_screen(xpm_image_t xpm_image,int x,int y);
 void treat_mouse_click();
 int game_update();
 void draw_mouse();

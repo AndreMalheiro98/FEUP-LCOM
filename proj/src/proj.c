@@ -83,7 +83,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
     game_exit_graphic_mode();
     return -1;
   }
- 
+  
   //main cycle for interrupts
   message msg;
   int r,ipc_status;

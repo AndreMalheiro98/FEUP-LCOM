@@ -127,21 +127,13 @@ void (vg_draw_pixel)(uint16_t x,uint16_t y,uint32_t color,char *end_buffer){
   } 
 }
 
-int (vg_draw_pixmap)(xpm_map_t xpm,int x,int y){
-  enum xpm_image_type type= XPM_8_8_8_8;
-  xpm_image_t img;
-  uint8_t *sprite= xpm_load(xpm,type,&img);
-  if(sprite==NULL)
-  {
-    printf("Error loading xpm\n");
-    return -1;
-  }
+int (vg_draw_pixmap)(xpm_image_t img,int x,int y){
   if((img.width+x) >hres || (img.width+x)<0 || (img.height+y)>vres || (img.height+y)<0)
   {
     printf("Error:Pixmap out of bounds %d %d %d %d\n",img.width+x,hres,img.height+y,vres);
     return -1;
   }
-  free(sprite);
+
   vg_display_pixmap(img,x,y,buffer);  
   return 0;
 }
