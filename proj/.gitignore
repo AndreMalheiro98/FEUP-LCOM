@@ -10,3 +10,4 @@ timer.o
 utils.o
 highscore.o
 disk.o
+keyboard.o
