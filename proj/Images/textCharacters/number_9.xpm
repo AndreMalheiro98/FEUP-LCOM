@@ -1,9 +1,9 @@
 /* XPM */
-static xpm_row_t const nine_xpm[] = {
+static xpm_row_t const xpm_9[] = {
 /* columns rows colors chars-per-pixel */
 "50 50 2 1 ",
-"  c black",
-". c None",
+"  c #FFFFFF",
+". c #000000",
 /* pixels */
 "..................................................",
 "..................................................",

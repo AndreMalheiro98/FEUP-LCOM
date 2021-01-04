@@ -1,6 +1,18 @@
 #include <lcom/lcf.h>
 #include "game.h"
 #include "../Images/game_background.xpm"
+#include <string.h>
+#include "../Images/textCharacters/number_0.xpm"
+#include "../Images/textCharacters/number_1.xpm"
+#include "../Images/textCharacters/number_2.xpm"
+#include "../Images/textCharacters/number_3.xpm"
+#include "../Images/textCharacters/number_4.xpm"
+#include "../Images/textCharacters/number_5.xpm"
+#include "../Images/textCharacters/number_6.xpm"
+#include "../Images/textCharacters/number_7.xpm"
+#include "../Images/textCharacters/number_8.xpm"
+#include "../Images/textCharacters/number_9.xpm"
+
 static Game *game;
 extern uint8_t bytes[2];
 extern bool kbc_flag;
@@ -101,8 +113,6 @@ Game * create_new_game(){
   if(load_pixmap(game_background_xpm,&game->game_background)==NULL)
     return NULL;
 
-  initBackgroundBuffer(game->game_background);
-
   return game;
 }
 
@@ -114,9 +124,12 @@ int game_begin(){
   game->disk=create_disk();
   if(game->disk==NULL)
     return -1;
-  game->bullet_count=9;
+  game->bullet_count=15;
   game->shot_fired=0;
+  game->score=0;
+  update_background();
   updateGameBuffer();
+  draw_score();
   if(draw_screen(game->disk->img,game->disk->x,game->disk->y)==-1)
     return -1;
   return 0;
@@ -155,11 +168,11 @@ int game_state_machine(){
       game->state= STATE_DURING_GAME;
     break;
   case STATE_DURING_GAME:
+    if(game->disk->hit)
+      update_background();
     if(game->disk->out_of_bounds)
-    {
       reset_disk();
-      
-    }
+    
     update_game();
     draw_mouse();
     break;
@@ -206,7 +219,10 @@ void treat_mouse_click(){
       game->shot_fired=1;
       game->bullet_count--;
       if((game->game_mouse->x+game->game_mouse->img.width/2)>=game->disk->x && (game->game_mouse->x+game->game_mouse->img.width/2)<=(game->disk->x+game->disk->img.width) && (game->game_mouse->y+game->game_mouse->img.height/2)>=game->disk->y && (game->game_mouse->y+game->game_mouse->img.height/2)<=(game->disk->y+game->disk->img.height) && !game->disk->hit)
+      {
         game->disk->hit=1;
+        game->score++;
+      }
       if(game->bullet_count==0)
         game->state=STATE_DRAW_MAIN_MENU;
     }
@@ -219,6 +235,79 @@ void treat_mouse_click(){
 void draw_mouse(){
   update_mouse(game->game_mouse->img,game->game_mouse->x,game->game_mouse->y);
   refresh_screen();
+}
+
+void draw_score(){
+  //Get score string
+  int x=0;
+  int xDiff=50;
+  int intAux=game->score;
+  int final_score=0;
+  int number_of_digits=1;
+  //Inverting score
+  while(intAux!=0){
+    final_score=final_score*10;
+    final_score=final_score+intAux%10;
+    intAux=intAux/10;
+    number_of_digits++;
+  }
+  while(number_of_digits>1){
+    xpm_image_t number_img;
+    parseScoreXpm(&number_img,final_score%10);
+    final_score=final_score/10;
+    initBackgroundBuffer(number_img,x,0);
+    number_of_digits--;
+    x+=xDiff;
+  }
+}
+
+int parseScoreXpm(xpm_image_t *xpm,int i){
+  switch (i)
+  {
+  case 0:
+    if(load_pixmap(xpm_0,xpm)==NULL)  
+      return -1;
+    break;
+  case 1:
+    if(load_pixmap(xpm_1,xpm)==NULL)  
+      return -1;
+    break;
+  case 2:
+    if(load_pixmap(xpm_2,xpm)==NULL)  
+      return -1;
+    break;
+  case 3:
+    if(load_pixmap(xpm_3,xpm)==NULL)  
+      return -1;
+    break;
+  case 4:
+    if(load_pixmap(xpm_4,xpm)==NULL)  
+      return -1;
+    break;
+  case 5:
+    if(load_pixmap(xpm_5,xpm)==NULL)  
+      return -1;
+    break;
+  case 6:
+    if(load_pixmap(xpm_6,xpm)==NULL)  
+      return -1;
+    break;
+  case 7:
+    if(load_pixmap(xpm_7,xpm)==NULL)  
+      return -1;
+    break;
+  case 8:
+    if(load_pixmap(xpm_8,xpm)==NULL)  
+      return -1;
+    break;
+  case 9:
+    if(load_pixmap(xpm_9,xpm)==NULL)  
+      return -1;
+    break;
+  default:
+    return -1;
+  }
+  return 0;
 }
 
 void handle_keyboard_interrupts(){
@@ -318,4 +407,9 @@ void handle_timer_interrupts(){
     ticks_between_shot=0;
   }
 
+}
+
+void update_background(){
+  initBackgroundBuffer(game->game_background,0,0);
+  draw_score();
 }

@@ -75,6 +75,6 @@ uint8_t *load_pixmap(xpm_map_t xpm,xpm_image_t *img);
 void free_buffers();
 
 int out_of_bounds(uint16_t leftCornerX,uint16_t leftCornerY,uint16_t rightCornerX,uint16_t rightCornerY);
-void initBackgroundBuffer(xpm_image_t background_img);
+void initBackgroundBuffer(xpm_image_t background_img,int x,int y);
 void updateGameBuffer();
 #endif

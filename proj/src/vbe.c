@@ -229,8 +229,8 @@ int out_of_bounds(uint16_t leftCornerX,uint16_t leftCornerY,uint16_t rightCorner
   return 0;
 }
 
-void initBackgroundBuffer(xpm_image_t background_img){
-  vg_display_pixmap(background_img,0,0,background_buffer);
+void initBackgroundBuffer(xpm_image_t background_img,int x,int y){
+  vg_display_pixmap(background_img,x,y,background_buffer);
 }
 
 void updateGameBuffer(){
