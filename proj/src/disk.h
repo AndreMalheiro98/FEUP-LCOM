@@ -12,6 +12,8 @@ typedef struct{
     uint16_t target_x;
     uint16_t target_y;
     xpm_image_t img;
+    xpm_image_t splatter_img;
+    bool kill;
 }Disk;
 
 Disk * create_disk();

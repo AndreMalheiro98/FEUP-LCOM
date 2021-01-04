@@ -100,7 +100,7 @@ Game * create_new_game(){
     return NULL;
 
   initBackgroundBuffer(game->game_background);
-  
+
   return game;
 }
 
@@ -189,6 +189,9 @@ void treat_mouse_click(){
       else if(game->game_mouse->y>=(game->pause_menu->y+254) && game->game_mouse->y<=(game->pause_menu->y+333))
         game->state=STATE_DRAW_MAIN_MENU;
     } 
+  case STATE_DURING_GAME:
+    if((game->game_mouse->x+game->game_mouse->img.width/2)>=game->disk->x && (game->game_mouse->x+game->game_mouse->img.width/2)<=(game->disk->x+game->disk->img.width) && (game->game_mouse->y+game->game_mouse->img.height/2)>=game->disk->y && (game->game_mouse->y+game->game_mouse->img.height/2)<=(game->disk->y+game->disk->img.height))
+      game->disk->kill=1;
   default:
     break;
   }
@@ -272,7 +275,14 @@ void update_game(){
   update_disk_coord();
   
   if(!out_of_bounds(game->disk->x,game->disk->y,game->disk->x+game->disk->img.width,game->disk->y+game->disk->img.height)){
-    if(draw_screen(game->disk->img,game->disk->x,game->disk->y)==-1)
-      return ;
+    if(game->disk->kill)
+    {
+      if(draw_screen(game->disk->splatter_img,game->disk->x,game->disk->y)==-1)
+        return ;
+    }
+    else
+      if(draw_screen(game->disk->img,game->disk->x,game->disk->y)==-1)
+        return ;
+    
   }
 }

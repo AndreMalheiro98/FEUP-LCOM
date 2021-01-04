@@ -151,7 +151,7 @@ void (vg_display_pixmap)(xpm_image_t img,int x,int y,char * end_buffer){
     for(uint16_t j=0;j<img.width;j++)
     {
       uint32_t color=by[index];
-      if(!(end_buffer==mouse_buffer && color==0))
+      if(!(color==0))
         vg_draw_pixel(actX,actY,color,end_buffer);
       actX++;
       index++;
