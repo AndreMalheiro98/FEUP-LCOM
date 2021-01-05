@@ -1,8 +1,17 @@
+ /**
+ * @file mouse.h
+ * Mouse
+ */
 #ifndef MOUSE_H
 #define MOUSE_H
 #include "i8042.h"
+/** @defgroup mouse Mouse
+ * @{
+ *
+ * Functions for using the mouse
+ */
 /**
- * @brief  
+ * @brief Mouse coordinates and its image 
 **/
 typedef struct{
     int16_t x;
@@ -10,43 +19,43 @@ typedef struct{
     xpm_image_t img;
 }Mouse;
 /**
- * @brief  
+ * @brief  Enables mouse data report
 **/
 int (mouse_enable_data_report)(void);
 /**
- * @brief  
+ * @brief Mouse interrupt Handler
 **/
 void (mouse_ih)(void);
 /**
- * @brief  
+ * @brief Retrieves a scancode when the interrupt is generated
 **/
 void createMousePacket(uint8_t array[3],struct packet *pp);
 /**
- * @brief  
+ * @brief  Subscribes to the interrupts from the mouse
 **/
 int (mouse_subscribe_interrupts)(uint32_t *bit_no);
 /**
- * @brief  
+ * @brief  Unsubscribes from the interrupts of the mouse
 **/
 int (mouse_unsubscribe_interrupts)();
 /**
- * @brief  
+ * @brief  Reads upon return from the mouse
 **/
 int (read_return_from_mouse)();
 /**
- * @brief  
+ * @brief Sets minix default KBC command byte
 **/
 int(set_default_minix)();
 /**
- * @brief  
+ * @brief Initialize mouse
 **/
 int (start_mouse)(uint32_t * mouse_mask);
 /**
- * @brief  
+ * @brief Disables mouse
 **/
 int (disable_mouse)();
 /**
- * @brief  
+ * @brief Returns mouse class instance if it exists, else, creates one and returns it
 **/
 Mouse * get_mouse();
 /**
@@ -54,7 +63,7 @@ Mouse * get_mouse();
 **/
 void eliminate_Mouse();
 /**
- * @brief  
+ * @brief  Updates mouse position on the screen
 **/
 void mouse_update_position(struct packet data);
 

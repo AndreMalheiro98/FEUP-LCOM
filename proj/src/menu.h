@@ -1,6 +1,12 @@
+ /**
+ * @file menu.h
+ * Menu
+ */
 #ifndef __MENU_H
 #define __MENU_H
-
+/**
+ * @brief Menu coordinates and its image
+ */ 
 typedef struct{
     uint16_t x;
     uint16_t y;
@@ -8,12 +14,12 @@ typedef struct{
 }Menu;
 
 /**
- * @brief  
+ * @brief Get Menu
 **/
 Menu * get_menu(int x);
 
 /**
- * @brief  
+ * @brief  Eliminates menu
 **/
 void delete_menus();
 

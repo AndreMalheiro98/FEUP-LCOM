@@ -1,16 +1,26 @@
+ /**
+ * @file keyboard.h
+ * Keyboard
+ */
 #ifndef __KEYBOARD_H
 #define __KEYBOARD_H
-
 #define NUMBER_OF_TRIES 2 /* number of tries possible*/
+
+/** @defgroup keyboard Keyboard
+ * @{
+ *
+ * Functions for using the keyboard
+ */
+
 /**
- * @brief  
+ * @brief  Breakcodes for keys pressed
 **/
 enum KBC_KEY {
 TWO_BYTE = 0,     /* enum Two bytes */
 ESC_BC = 1,    /* enum Esc breakcode */
 NO_KEY = 2,       /* enum No key pressed or invalid key*/
-R_MC = 3,       /* enum R makecode*/
-R_BC = 4,       /* enum R breakcode*/
+R_MC = 3, 
+R_BC = 4,      
 SPACE_BC = 5, /* enum Space breakcode*/
 ENTER_BC = 6,  /* enum Enter breakcode*/
 A_BC = 7,

@@ -1,8 +1,12 @@
+ /**
+ * @file timer.h
+ * Timer
+ */
 #ifndef __TIMER_H
 #define __TIMER_H
 
 
-/** @defgroup timer timer
+/** @defgroup timer Timer
  * @{
  *
  * Functions for using the i8254 timers

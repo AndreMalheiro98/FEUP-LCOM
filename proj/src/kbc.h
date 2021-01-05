@@ -1,31 +1,40 @@
+ /**
+ * @file kbc.h
+ * KBC
+ */
 #ifndef __KBC_H
 #define __KBC_H
+/** @defgroup kbc KBC
+ * @{
+ *
+ * Functions for using the KBC
+ */
 /**
- * @brief  
+ * @brief  Writes command       
 **/
 int (write_command)(uint8_t command);
 /**
- * @brief  
+ * @brief Writes command byte
 **/
 int (write_command_byte)(uint8_t command_byte);
 /**
- * @brief  
+ * @brief empties out the input buffer 
 **/
 void (empty_input_buffer)();
 /**
- * @brief  
+ * @brief checks data error
 **/
 int check_data_error(uint8_t reg_status);
 /**
- * @brief  
+ * @brief Checks status register
 **/
 int checkStatusRegister(uint8_t *reg_status);
 /**
- * @brief  
+ * @brief Reads keyboard data
 **/
 int read_keyboard_data(uint8_t *kb_data);
 /**
- * @brief  
+ * @brief  Reads mouse data
 **/
 int read_mouse_data(uint8_t *mouse_data);
 #endif
